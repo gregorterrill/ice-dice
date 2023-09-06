@@ -1,0 +1,76 @@
+field: 23107aa4-4dba-42d1-9478-9147f2d514f2 # Page Content
+fieldLayouts:
+  a80860f9-28a5-4a81-983b-247376d80193:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            elementCondition: null
+            fieldUid: e394bb77-5573-4b68-983b-2a40b765ba41 # Image
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 214743a4-827b-4d74-9752-0e8cbafdc2a6
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 43b73ce1-77ba-4763-9d4b-18c75a2819c7
+        userCondition: null
+fields:
+  e394bb77-5573-4b68-983b-2a40b765ba41: # Image
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: image
+    instructions: null
+    name: Image
+    searchable: false
+    settings:
+      allowSelfRelations: false
+      allowSubfolders: false
+      allowUploads: true
+      allowedKinds:
+        - image
+      branchLimit: null
+      defaultUploadLocationSource: 'volume:927a5a45-cf0c-49eb-9ca9-0090121e9c8b' # Images
+      defaultUploadLocationSubpath: null
+      localizeRelations: false
+      maintainHierarchy: false
+      maxRelations: null
+      minRelations: null
+      previewMode: full
+      restrictFiles: true
+      restrictLocation: false
+      restrictedDefaultUploadSubpath: null
+      restrictedLocationSource: 'volume:927a5a45-cf0c-49eb-9ca9-0090121e9c8b' # Images
+      restrictedLocationSubpath: null
+      selectionCondition:
+        __assoc__:
+          -
+            - elementType
+            - craft\elements\Asset
+          -
+            - fieldContext
+            - global
+          -
+            - class
+            - craft\elements\conditions\assets\AssetCondition
+      selectionLabel: null
+      showSiteMenu: true
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      sources:
+        - 'volume:927a5a45-cf0c-49eb-9ca9-0090121e9c8b' # Images
+      targetSiteId: null
+      validateRelatedElements: false
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
+handle: image
+name: Image
+sortOrder: 2

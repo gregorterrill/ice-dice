@@ -1,0 +1,9 @@
+headingLevels: false
+name: 'Simple (Links, Bold, Italic)'
+options:
+  link:
+    addTargetToExternalLinks: true
+toolbar:
+  - bold
+  - italic
+  - link

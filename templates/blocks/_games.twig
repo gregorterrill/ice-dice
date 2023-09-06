@@ -1,0 +1,80 @@
+<div class="container">
+
+  <p class="typo-lead text-center mb-40">Browse our always-growing collection of games, from your childhood favorites to the hottest new releases.<br>Bringing a large group? Only have a few minutes? Use the filters below to find the perfect game!</p>
+
+  {# GET FILTER VALUES FROM PARAMS #}
+  {% set players = craft.app.request.getParam('players') ?? 'any' %}
+  {% set length = craft.app.request.getParam('length') ?? 'any' %}
+
+  {# DISPLAY FILTER OPTIONS #}
+  <form id="game-filters" action="" class="mb-60 flex justify-center">
+
+    <fieldset class="relative pl-48 mr-60">
+      <span class="absolute left-0 top-4 text-dark/50">{{ craft.supersearch.icon('players', 40) }}</span>
+      <span class="font-bold">How many players?</span>
+      <div class="flex space-x-16">
+        <label for="players-any" class="cursor-pointer"><input type="radio" id="players-any" name="players" value="any" class="mr-4" {{ players == 'any' ? ' checked' }}>Any</label>
+        <label for="players-1" class="cursor-pointer"><input type="radio" id="players-1" name="players" value="1" class="mr-4"{{ players == '1' ? ' checked' }}>1</label>
+        <label for="players-2" class="cursor-pointer"><input type="radio" id="players-2" name="players" value="2" class="mr-4"{{ players == '2' ? ' checked' }}>2</label>
+        <label for="players-3" class="cursor-pointer"><input type="radio" id="players-3" name="players" value="3" class="mr-4"{{ players == '3' ? ' checked' }}>3</label>
+        <label for="players-4" class="cursor-pointer"><input type="radio" id="players-4" name="players" value="4" class="mr-4"{{ players == '4' ? ' checked' }}>4</label>
+        <label for="players-5" class="cursor-pointer"><input type="radio" id="players-5" name="players" value="5" class="mr-4"{{ players == '5' ? ' checked' }}>5</label>
+        <label for="players-6" class="cursor-pointer"><input type="radio" id="players-6" name="players" value="6" class="mr-4"{{ players == '6' ? ' checked' }}>6+</label>
+      </div>
+    </fieldset>
+
+    <fieldset class="relative pl-48 mr-60">
+      <span class="absolute left-0 top-4 text-dark/50">{{ craft.supersearch.icon('length', 40) }}</span>
+      <span class="font-bold">How long a game?</span>
+      <div class="flex space-x-16">
+        <label for="length-any" class="cursor-pointer"><input type="radio" id="length-any" name="length" value="any" class="mr-4" {{ length == 'any' ? ' checked' }}>Any</label>
+        <label for="length-under-30" class="cursor-pointer"><input type="radio" id="length-under-30" name="length" value="under-30" class="mr-4"{{ length == 'under-30' ? ' checked' }}>< 30 mins</label>
+        <label for="length-30-60" class="cursor-pointer"><input type="radio" id="length-30-60" name="length" value="30-60" class="mr-4"{{ length == '30-60' ? ' checked' }}>30-60 mins</label>
+        <label for="length-60-90" class="cursor-pointer"><input type="radio" id="length-60-90" name="length" value="60-90" class="mr-4"{{ length == '60-90' ? ' checked' }}>60-90 mins</label>
+        <label for="length-90-120" class="cursor-pointer"><input type="radio" id="length-90-120" name="length" value="90-120" class="mr-4"{{ length == '90-120' ? ' checked' }}>90-120 mins</label>
+        <label for="length-over-120" class="cursor-pointer"><input type="radio" id="length-over-120" name="length" value="over-120" class="mr-4"{{ length == 'over-120' ? ' checked' }}>120+ mins</label>
+      </div>
+    </fieldset>
+    
+  </form>
+
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-24">
+
+  {% set games = craft.entries.section('games') %}
+  
+  {# APPLY FILTERS #}
+  {% if players != 'any' %}
+    {% set games = games.minPlayers('<= ' ~ players).maxPlayers('>= ' ~ players) %}
+  {% endif %}
+
+  {% if length != 'any' %}
+    {% if length == 'under-30' %}
+      {% set games = games.maxLength('<= 30') %}
+    {% elseif length == 'over-120' %}
+      {% set games = games.minLength('>= 120') %}
+    {% else %}
+      {% set games = games.minLength('>= ' ~ length|split('-')[0]).maxLength('<= ' ~ length|split('-')[1]) %}
+    {% endif %}
+  {% endif %}
+  
+  {# SHOW RESULTS #}
+  {% set games = games.orderBy('title ASC').collect() %}
+  {% for game in games %}
+    <div id="game-{{ game.id }}" class="flex items-center p-24 bg-white rounded-lg shadow">
+      {% set coverImage = game.coverImage.one() %}
+      <img class="h-120 w-auto rounded-sm" src="{{ coverImage.url ?? '' }}" alt="{{ game.title }} box cover" />
+      <div class="pl-24 flex-grow">
+        <h2 class="font-bold">{{ game.title }}</h2>
+        <div class="text-dark"><span class="w-24 h-24 inline-block mr-8 relative top-4">{{ craft.supersearch.icon('players', 24) }}</span>{{ game.minPlayers }}{% if game.minPlayers != game.maxPlayers %}-{{ game.maxPlayers }}{% endif %} player{% if game.maxPlayers != 1 %}s{% endif %}</div>
+        <div class="text-dark"><span class="w-24 h-24 inline-block mr-8 relative top-4">{{ craft.supersearch.icon('length', 24) }}</span>{{ game.minLength }}{% if game.minLength != game.maxLength %}-{{ game.maxLength }}{% endif %} mins</div>
+        <div class="flex flex-wrap mt-8">
+          {% for tag in game.gameTags.all() %}
+          <div class="inline-block mr-4 mt-4 bg-dark/60 rounded-lg px-6 py-4 text-12 text-white font-bold uppercase">{{ tag.title }}</div>
+          {% endfor %}
+        </div>
+      </div>
+      
+    </div>
+  {% endfor %}
+  </div>
+</div>

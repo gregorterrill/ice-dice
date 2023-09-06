@@ -1,0 +1,30 @@
+<header class="sticky z-90 top-0 inset-x-0 bg-black h-140 text-white mb-100">
+  <div class="container h-140">
+
+    <div class="flex h-full w-full items-center justify-between">
+
+      <h1 class="block py-16 h-full">
+        <span class="sr-only">{{ siteName }}</span>
+        <a class="block" href="{{ siteUrl }}">
+          <img class="w-auto h-100 block" src="{{ siteUrl('dist/logo.svg') }}">
+        </a>
+      </h1>
+
+      <ul class="flex gap-20 font-heading text-18">
+        {% set menuItems = craft.entries.section('pages').slug('not __home__').level(1).all() %}
+        {% for item in menuItems %}
+        <li><a class="block border-b-2 {{ craft.app.request.segments and craft.app.request.segments[0] == item.slug ? 'border-white' : 'border-transparent' }} hover:border-brand transition-colors" href="{{ item.url }}">{{ item.title }}</a></li>
+        {% endfor %}
+      </ul>
+
+      {% set searchTerm = craft.app.request.param('query') ?? '' %}
+      <form action="{{ siteUrl('search') }}" class="w-[380px] bg-white h-40 relative text-black group border-2 border-transparent focus-within:border-brand-light transition-all">
+        <input id="search" name="query" type="text" placeholder="What are you looking for?" value="{{ searchTerm }}" class="w-full bg-transparent pl-12 pr-40 h-40 focus:outline-none leading-none"></input>
+        <button type="submit" class="absolute right-2 top-2 bg-brand text-white rounded-lg p-4 h-32 w-32 focus:outline-none hover:bg-brand-dark focus:bg-brand-dark transition-all">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-24 h-24" viewBox="0 96 960 960"><path fill="currentColor" d="M796 935 533 672q-30 26-69.959 40.5T378 727q-108.162 0-183.081-75Q120 577 120 471t75-181q75-75 181.5-75t181 75Q632 365 632 471.15 632 514 618 554q-14 40-42 75l264 262-44 44ZM377 667q81.25 0 138.125-57.5T572 471q0-81-56.875-138.5T377 275q-82.083 0-139.542 57.5Q180 390 180 471t57.458 138.5Q294.917 667 377 667Z"/></svg>
+        </button>
+        <ul id="search-autocomplete-results" class="hidden absolute top-full -inset-x-2 bg-white divide-y divide-brand/50 border-2 border-brand-light"></ul>
+      </form>
+    </div>
+  </div>
+</header>

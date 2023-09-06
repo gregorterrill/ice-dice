@@ -1,0 +1,96 @@
+field: 23107aa4-4dba-42d1-9478-9147f2d514f2 # Page Content
+fieldLayouts:
+  a3543144-c88d-4bb5-879a-94ce02771645:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            elementCondition: null
+            fieldUid: c6112f52-3fbd-4013-93bc-1bd5becc7e4d # Heading
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 68462161-4627-44d0-a17d-2178a9185e05
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: f546de82-cde3-47c7-9702-054793adf7c8 # Links
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 15485827-956c-4e6e-be4e-947775d4e01a
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: ff76c788-4478-4123-be56-5972f66356c1
+        userCondition: null
+fields:
+  c6112f52-3fbd-4013-93bc-1bd5becc7e4d: # Heading
+    columnSuffix: fnrqfcgo
+    contentColumnType: text
+    fieldGroup: null
+    handle: heading
+    instructions: null
+    name: Heading
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: false
+      columnType: null
+      initialRows: 4
+      multiline: false
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  f546de82-cde3-47c7-9702-054793adf7c8: # Links
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: links
+    instructions: null
+    name: Links
+    searchable: false
+    settings:
+      blockTypeFields: 0
+      changedFieldIndicator: 1642448099
+      columns:
+        __assoc__:
+          -
+            - ab0c9f77-f93e-43b0-9551-ee2f0af0f57e # Linked Entry
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+          -
+            - 4ae94014-6cd2-4a2d-ba17-bf04ee0ce7fc # Link Text
+            -
+              __assoc__:
+                -
+                  - width
+                  - ''
+      contentTable: '{{%stc_5_links}}'
+      fieldLayout: table
+      maxRows: 4
+      minRows: 1
+      propagationKeyFormat: null
+      propagationMethod: all
+      selectionLabel: 'Add a link'
+      staticField: null
+    translationKeyFormat: null
+    translationMethod: none
+    type: verbb\supertable\fields\SuperTableField
+handle: links
+name: Links
+sortOrder: 3

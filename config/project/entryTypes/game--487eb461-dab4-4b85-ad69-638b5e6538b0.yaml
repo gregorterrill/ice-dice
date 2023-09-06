@@ -1,0 +1,115 @@
+fieldLayouts:
+  733142ee-c1a2-4dfe-9cf3-5e139f1a1ff4:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            elementCondition: null
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: e8d3506e-3db3-4238-baad-6dc68875ca00
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: a0d96c3a-398c-4931-bd13-cf9700fdff20 # Cover Image
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: bc437c0e-1b56-4892-94ea-6933001be1b3
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: 1f273647-ee3f-4259-80c7-63e543290b83 # Min Players
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: ca79c425-ea9f-44a6-afa4-41811cd0404c
+            userCondition: null
+            warning: null
+            width: 25
+          -
+            elementCondition: null
+            fieldUid: ca49915c-9362-48e2-8024-7d6537a359bc # Max Players
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 080f58ae-229e-4386-b78f-c7f50f9559c0
+            userCondition: null
+            warning: null
+            width: 25
+          -
+            elementCondition: null
+            fieldUid: 5ea2d0be-32e1-4a48-b6ad-f23ae42393c5 # Min Length
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 5102482a-2aa8-44c2-8f9f-875a297de67f
+            userCondition: null
+            warning: null
+            width: 25
+          -
+            elementCondition: null
+            fieldUid: 96a74885-1135-4e53-8e10-50f80ca4fae8 # Max Length
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: fcd0a0e3-e561-47fd-ac19-53de1bba5ac5
+            userCondition: null
+            warning: null
+            width: 25
+          -
+            elementCondition: null
+            fieldUid: bb6a1fd5-3dec-449e-b43f-05898f032dde # Game Tags
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 7ce4a3b7-feca-423d-a720-5174d75eb813
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: 1a05efe4-f135-4354-94f7-d2f9ce6726e1
+        userCondition: null
+handle: game
+hasTitleField: true
+name: Game
+section: 94f88125-a736-4275-abfc-535cda94c027 # Games
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

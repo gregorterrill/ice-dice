@@ -1,0 +1,42 @@
+<div class="container">
+  <div id='calendar'></div>
+</div>
+
+{% set items = craft.entries.section('events').all() %}
+
+{% set calendarJs %}
+document.addEventListener('DOMContentLoaded', function() {
+  var calendarEl = document.getElementById('calendar');
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    events: [
+      {% for item in items %}
+      {% if item.type.handle == 'weeklyEvent' %}
+      {
+        title: "{{ item.title }}",
+        description: "{{ item.description }}",
+        url: "{{ item.url }}",
+        daysOfWeek: [ "{{ item.dayOfWeek }}" ],
+        startTime: '{{ item.startTime|date("H:i:s") }}',
+        endTime: '{{ item.startTime|date_modify('+ ' ~ item.duration ~ ' hours')|date('H:i:s') }}',
+        color: 'red'
+      },
+      {% else %}
+      {
+        title: "{{ item.title }}",
+        description: "{{ item.description }}",
+        url: "{{ item.url }}",
+        start: '{{ item.startDate|date("Y-m-d\\TH:i:s") }}',
+        end: '{{ item.startDate|date_modify('+ ' ~ item.duration ~ ' hours')|date('Y-m-d\\TH:i:s') }}',
+        color: 'blue'
+      },
+      {% endif %}
+      {% endfor %}
+    ]
+  });
+  calendar.render();
+});
+{% endset %}
+
+{% do view.registerJsFile('https://cdn.jsdelivr.net/npm/fullcalendar@6.1.5/index.global.min.js', { position: POS_END}) %}
+{% do view.registerJs(calendarJs, POS_END) %}

@@ -1,0 +1,89 @@
+columnSuffix: lxetjvfl
+contentColumnType: string
+fieldGroup: c0741afd-8d6d-4d7f-8380-02052e0593bf # Common
+handle: dayOfWeek
+instructions: null
+name: 'Day of Week'
+searchable: false
+settings:
+  options:
+    -
+      __assoc__:
+        -
+          - label
+          - Monday
+        -
+          - value
+          - '1'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Tuesday
+        -
+          - value
+          - '2'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Wednesday
+        -
+          - value
+          - '3'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Thursday
+        -
+          - value
+          - '4'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Friday
+        -
+          - value
+          - '5'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Saturday
+        -
+          - value
+          - '6'
+        -
+          - default
+          - ''
+    -
+      __assoc__:
+        -
+          - label
+          - Sunday
+        -
+          - value
+          - '0'
+        -
+          - default
+          - ''
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Dropdown

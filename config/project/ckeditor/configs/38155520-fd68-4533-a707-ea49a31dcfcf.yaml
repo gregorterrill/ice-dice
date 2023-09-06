@@ -1,0 +1,40 @@
+headingLevels: false
+name: Standard
+options:
+  heading:
+    options:
+      -
+        model: paragraph
+        title: Paragraph
+        view: p
+      -
+        class: lead
+        model: paragraph
+        title: 'Lead Paragraph'
+        view: p
+      -
+        model: heading2
+        title: 'Section Heading'
+        view: h2
+      -
+        model: heading3
+        title: Subheading
+        view: h3
+  link:
+    addTargetToExternalLinks: true
+toolbar:
+  - heading
+  - '|'
+  - bold
+  - italic
+  - link
+  - '|'
+  - bulletedList
+  - numberedList
+  - outdent
+  - indent
+  - '|'
+  - undo
+  - redo
+  - '|'
+  - sourceEditing

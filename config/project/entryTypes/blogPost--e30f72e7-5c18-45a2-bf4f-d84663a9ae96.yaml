@@ -1,0 +1,67 @@
+fieldLayouts:
+  ccc5053e-6eb3-46ed-b1b8-81326ecbe315:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            elementCondition: null
+            id: null
+            instructions: null
+            label: null
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 894d718c-96a3-47aa-97a3-33710709c1db
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: f54a86b5-8677-40ad-8680-56e3d5339ff9 # Blog Image
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 90d2bc02-d2e2-4a82-9b4c-c0cd1ec40492
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: 23107aa4-4dba-42d1-9478-9147f2d514f2 # Page Content
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 34452ff6-3b1d-4399-8258-69054a8ec8eb
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: c9b80454-89c5-415a-93bf-5bde7c719bce
+        userCondition: null
+handle: blogPost
+hasTitleField: true
+name: 'Blog Post'
+section: 1824540e-c0f3-439c-afd2-0a89d2f15259 # Blog
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

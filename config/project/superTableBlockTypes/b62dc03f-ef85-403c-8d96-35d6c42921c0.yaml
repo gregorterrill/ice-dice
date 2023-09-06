@@ -1,0 +1,123 @@
+changedFieldIndicator: 1277785496
+field: f546de82-cde3-47c7-9702-054793adf7c8 # Links
+fieldLayouts:
+  67d99edb-70d7-4788-a590-6c53ccbb98f7:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            elementCondition: null
+            fieldUid: ab0c9f77-f93e-43b0-9551-ee2f0af0f57e # Linked Entry
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: af9917ac-1b2f-4fe0-aa35-9871c62acf09
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: 4ae94014-6cd2-4a2d-ba17-bf04ee0ce7fc # Link Text
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 85e086e9-712f-4dc1-a45d-07d16c7be51a
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: fb4c8a24-8e17-4211-b6d5-12961badb4bf # Icon Slug
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 8408ab0e-bff0-4e84-a61a-5e4ffd68fc08
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: c3210293-66b3-4fdd-b0cc-ee191c125bf7
+        userCondition: null
+fields:
+  4ae94014-6cd2-4a2d-ba17-bf04ee0ce7fc: # Link Text
+    columnSuffix: lpxapchf
+    contentColumnType: text
+    fieldGroup: null
+    handle: linkText
+    instructions: null
+    name: 'Link Text'
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: false
+      columnType: null
+      initialRows: 4
+      multiline: false
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+  ab0c9f77-f93e-43b0-9551-ee2f0af0f57e: # Linked Entry
+    columnSuffix: null
+    contentColumnType: string
+    fieldGroup: null
+    handle: linkedEntry
+    instructions: null
+    name: 'Linked Entry'
+    searchable: false
+    settings:
+      allowSelfRelations: false
+      branchLimit: null
+      localizeRelations: false
+      maintainHierarchy: false
+      maxRelations: 1
+      minRelations: 1
+      selectionCondition:
+        __assoc__:
+          -
+            - elementType
+            - craft\elements\Entry
+          -
+            - fieldContext
+            - global
+          -
+            - class
+            - craft\elements\conditions\entries\EntryCondition
+      selectionLabel: null
+      showSiteMenu: true
+      sources: '*'
+      targetSiteId: null
+      validateRelatedElements: false
+      viewMode: null
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Entries
+  fb4c8a24-8e17-4211-b6d5-12961badb4bf: # Icon Slug
+    columnSuffix: ndwdzyir
+    contentColumnType: text
+    fieldGroup: null
+    handle: iconSlug
+    instructions: null
+    name: 'Icon Slug'
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: false
+      columnType: null
+      initialRows: 4
+      multiline: false
+      placeholder: null
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText

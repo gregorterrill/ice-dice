@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  [id], :target {
+    scroll-margin-top: 200px;
+  }
+
+  /* WRAPPERS / CONTAINERS */
+  .wrapper { @apply min-h-screen flex flex-col; }
+
+  .wrapper main { @apply flex-grow; }
+
+  .container {
+    @apply w-full max-w-screen-2xl mx-auto px-24 md:px-40;
+  }
+
+  body[data-modal-open="true"] {
+    @apply max-h-screen overflow-hidden;
+  }
+
+  /* TYPOGRAPHY - FONT SIZES / WEIGHTS */
+  .typo-h1, .typography h1 { @apply font-heading font-semibold text-34 md:text-44; }
+  .typo-h2, .typography h2 { @apply font-heading font-semibold text-28 md:text-34; }
+  .typo-h3, .typography h3 { @apply font-heading font-semibold text-24 md:text-28; }
+  .typo-h4, .typography h4 { @apply font-heading font-semibold text-20 md:text-24; }
+  .typo-h5, .typography h5 { @apply font-heading font-semibold text-18 md:text-20; }
+  .typo-h6, .typography h6 { @apply font-body font-semibold text-15 md:text-15; }
+  .typo-body, .typography p, .typography li, .typography a:not([class]) { @apply font-body font-normal text-15; }
+  .typo-lead, .typography p.lead { @apply font-heading font-bold text-20; }
+  .typo-smallcaps, .typography p.smallcaps { @apply text-12 uppercase font-bold tracking-widest; }
+  .typo-link, .typography a:not([class]) { @apply font-bold underline; }
+
+  /* TYPOGRAPHY - LISTS */
+  .typography ul, .typography ol { @apply pl-18; }
+  .typography ul ul, .typography  ul ol, .typography ol ul, .typography ol ol { @apply pt-4; }
+  .typography li { @apply relative pl-6 mb-8; }
+  .typography ul { @apply list-disc; }
+  .typography ol { @apply list-decimal; }
+
+  /* TYPOGRAPHY - MARGINS */  
+  .typography h1,
+  .typography h2,
+  .typography h3,
+  .typography h4,
+  .typography h5,
+  .typography h6 {
+    @apply mt-60; 
+  }
+  .typography h1 { 
+    @apply mb-60; 
+  }
+  .typography h2,
+  .typography h3,
+  .typography h4,
+  .typography h5,
+  .typography h6,
+  .typography p, 
+  .typography ul, 
+  .typography ol {
+    @apply mb-24;
+  }
+  .typography *:first-child { margin-top:0 !important; }
+  .typography *:last-child { margin-bottom:0 !important; }
+
+  /* TYPOGRAPHY - HIDE STRAY PARAGRAPHS */
+  .typography p:empty { @apply hidden; }
+}
+
+@layer components {
+
+  .ais-SearchBox { @apply pt-5; }
+  .ais-SearchBox-form { @apply h-full w-full flex items-center; }
+  .ais-SearchBox-input { outline: none !important; flex-grow:1; }
+
+  .ais-Highlight-highlighted,
+  .ais-Snippet-highlighted { @apply bg-accent text-white; } 
+
+  input[type="search"]::-webkit-search-decoration,
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-results-button,
+  input[type="search"]::-webkit-search-results-decoration { display: none; }
+
+}

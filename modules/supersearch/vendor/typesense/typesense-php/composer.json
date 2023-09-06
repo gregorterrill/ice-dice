@@ -1,0 +1,49 @@
+{
+  "name": "typesense/typesense-php",
+  "description": "PHP client for Typesense Search Server: https://github.com/typesense/typesense",
+  "type": "library",
+  "homepage": "https://github.com/typesense/typesense-php",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Typesense",
+      "email": "contact@typesense.org",
+      "homepage": "https://typesense.org",
+      "role": "Developer"
+    },
+    {
+      "name": "Abdullah Al-Faqeir",
+      "email": "abdullah@devloops.net",
+      "homepage": "https://www.devloops.net",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "docs": "https://typesense.org/api",
+    "source": "https://github.com/typesense/typesense-php",
+    "issues": "https://github.com/typesense/typesense-php/issues"
+  },
+  "minimum-stability": "stable",
+  "autoload": {
+    "psr-4": {
+      "Typesense\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=7.4",
+    "guzzlehttp/guzzle": "^7.0",
+    "ext-json": "*",
+    "monolog/monolog": "^2.1"
+  },
+  "require-dev": {
+    "squizlabs/php_codesniffer": "3.*"
+  },
+  "scripts": {
+    "typesenseServer": [
+      "Composer\\Config::disableProcessTimeout",
+      "docker run -i -p 8108:8108 -v/tmp/typesense-server-data-1c/:/data typesense/typesense:0.15.0 --data-dir /data --api-key=xyz --listen-port 8108 --enable-cors"
+    ],
+    "lint": "phpcs -v",
+    "lint:fix": "phpcbf"
+  }
+}

@@ -1,0 +1,49 @@
+{% extends '_layout' %}
+
+{% block content %}
+
+{% if entry.slug == '__home__' %}
+<header class="-mt-100 mb-100 w-full relative h-[600px] overflow-hidden">
+  <img src="dist/home-page-hero-2.jpg" class="absolute inset-0 w-full h-full object-cover object-center">
+</header>
+{% endif %}
+
+<main class="">
+
+  <div class="container pb-40">
+    <div class="w-full text-center relative">
+      <span class="absolute z-10 inset-x-0 top-1/2 mt-2 h-3 bg-black"></span>
+      <h1 class="typo-h1 inline-block px-16 bg-white relative z-20">{{ entry.slug == '__home__' ? 'Welcome to Ice & Dice!' : entry.title }}</h1>
+    </div>
+  </div>
+
+{% set blocks = entry.pageContent.collect() %}
+{% for block in blocks %}
+
+  {% switch block.type %}
+  
+    {% case 'textContent' %}
+      <section class="{{ loop.first ? ' pt-40 pb-100' : 'py-100' }}">
+        <div class="container typography">
+          <div class="max-w-2xl mx-auto">
+            {{ block.textContent }}
+          </div>
+        </div>
+      </section>
+
+    {% case 'links' %}
+
+      {% include 'blocks/_links' with {
+        'heading' : block.heading,
+        'links' : block.links
+      } %}
+
+    {% case 'index' %}
+
+      {% include 'blocks/_' ~ block.indexType.value %}
+
+  {% endswitch %}
+  
+{% endfor %}
+</main>
+{% endblock %}

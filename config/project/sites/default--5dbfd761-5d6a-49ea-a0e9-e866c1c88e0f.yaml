@@ -1,0 +1,9 @@
+baseUrl: $PRIMARY_SITE_URL
+enabled: true
+handle: default
+hasUrls: true
+language: en-US
+name: 'Ice & Dice'
+primary: true
+siteGroup: cfe24d86-a6f3-48b7-9cb1-c65838ed2d12 # Primary
+sortOrder: 1

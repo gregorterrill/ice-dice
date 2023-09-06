@@ -1,0 +1,34 @@
+{% extends '_layout' %}
+
+
+{% block content %}
+<main class="">
+
+  <div class="container pb-40 text-center">
+    <time datetime="{{ entry.postDate|date('Y-m-d') }}" class="text-brand">- {{ entry.postDate|date('F j, Y') }} -</time>
+    <h1 class="typo-h1 mt-12">{{ entry.title }}</h1>
+  </div>
+
+  <div class="max-w-screen-lg mx-auto">
+
+    <div class="w-screen-lg h-3 bg-light mb-40"></div>
+
+  {% set blocks = entry.pageContent.collect() %}
+  {% for block in blocks %}
+
+    {% switch block.type %}
+    
+      {% case 'textContent' %}
+        <section class="pb-100">
+          <div class="typography">
+            {{ block.textContent }}
+          </div>
+        </section>
+
+    {% endswitch %}
+    
+  {% endfor %}
+
+  </div>
+</main>
+{% endblock %}

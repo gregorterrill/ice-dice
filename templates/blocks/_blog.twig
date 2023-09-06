@@ -1,0 +1,26 @@
+<div class="container">
+
+  <div class="max-w-screen-lg mx-auto mt-40">
+
+  {% set blog = craft.entries.section('blog').orderBy('postDate DESC').collect() %}
+  {% for post in blog %}
+    <a href="{{ post.url }}" class="group flex items-start mb-60">
+      <div class="flex-shrink-0 bg-dark w-200 h-200 rounded-lg overflow-hidden">
+        {% set image = post.blogImage.one() %}
+        <img src="{{ image ? image.getUrl({ width: 200, height: 200 }) : '' }}" />
+      </div>
+      <div class="pl-40 flex-grow">
+        <h2 class="typo-h4 mb-12">{{ post.title|widont }}</h2>
+        <time datetime="{{ post.postDate|date('Y-m-d') }}" class="text-brand">- {{ post.postDate|date('F j, Y') }} -</time>
+        <div class="py-24">{{ post.pageContent.type('textContent').one().textContent|split('</p>')[0]|raw }}</p></div>
+
+        <span class="relative bg-brand inline-flex py-8 px-40 rounded-lg">
+          <span class="typo-h6">Read more</span>
+          <span class="inline-block relative top-3 left-6 group-hover:left-12 transition-all">{{ craft.supersearch.icon('arrow-right', 20) }}</span>
+        </span>
+
+      </div>
+    </a>
+  {% endfor %}
+  </div>
+</div>

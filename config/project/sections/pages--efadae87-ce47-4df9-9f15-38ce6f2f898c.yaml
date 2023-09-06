@@ -1,0 +1,15 @@
+defaultPlacement: end
+enableVersioning: true
+handle: pages
+name: Pages
+propagationMethod: all
+siteSettings:
+  5dbfd761-5d6a-49ea-a0e9-e866c1c88e0f: # Ice & Dice
+    enabledByDefault: true
+    hasUrls: true
+    template: entries/_page
+    uriFormat: '{parent.uri}/{slug}'
+structure:
+  maxLevels: null
+  uid: 7275dd40-4da6-466e-94b2-f987b8c6f7a4
+type: structure

@@ -1,0 +1,145 @@
+{% extends '_layout' %}
+
+{% set searchTerm = craft.app.request.param('query') %}
+
+{% block content %}
+<main class="">
+
+  <div class="container pb-40">
+
+    <div class="flex items-end mb-40 justify-between">
+      <h1 class="typo-h1">Meilisearch Search (InstantSearch.js)</h1>
+      <a target="_blank" class="typo-link text-brand" href="http://localhost:7700">Meilisearch Dashboard</a>
+    </div>
+
+    <div class="relative border-2 border-dark/50 text-left w-full max-w-screen-md h-40 px-16 rounded-lg overflow-hidden">
+      <div id="searchbox" focus class="bg-transparent text-18 h-full w-full focus:!outline-none"></div>
+    </div>
+
+    <div class="lg:flex mt-60">
+
+      <div class="lg:w-1/4 check-filter-group">
+        <h2 class="typo-h5 mb-24">{{ 'Filter by type'|t }}</h2>
+        <div id="filter-container"></div>
+      </div>
+
+      <div class="lg:w-3/4 mt-40 lg:mt-0">
+
+        <h2 class="sr-only">{{ 'Results'|t }}</h2>
+        
+        <div id="hits"></div>
+
+        <div id="pagination"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@meilisearch/instant-meilisearch/dist/instant-meilisearch.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/instantsearch.js@4"></script>
+
+<script>
+const searchClient = instantMeiliSearch(
+  "http://localhost:7700",
+  "{{ getenv('MEILISEARCH_KEY') }}"
+);
+
+const search = instantsearch({
+  indexName: "{{ getenv('EXTERNAL_SEARCH_INDEX') }}",
+  searchClient,
+  initialUiState: {
+    "{{ getenv('EXTERNAL_SEARCH_INDEX') }}": {
+      query: "{{ searchTerm }}"
+    }
+  }
+});
+
+search.addWidgets([
+
+  instantsearch.widgets.configure({
+    hitsPerPage: 12,
+    attributesToSnippet: ['content:20'],
+  }),
+
+  instantsearch.widgets.searchBox({
+    container: '#searchbox',
+    placeholder: "{{ 'Search'|t }}",
+    templates: {
+      submit() {
+        return `<svg class="text-brand" width="24px" height="24px" viewBox="0 0 24 24">
+        <path fill="none" d="M0 0h24v24H0z"></path>
+        <path fill="currentColor" d="M14.73,13.31C15.52,12.24,16,10.93,16,9.5C16,5.91,13.09,3,9.5,3S3,5.91,3,9.5C3,13.09,5.91,16,9.5,16 c1.43,0,2.74-0.48,3.81-1.27L19.59,21L21,19.59L14.73,13.31z M9.5,14C7.01,14,5,11.99,5,9.5S7.01,5,9.5,5S14,7.01,14,9.5 S11.99,14,9.5,14z"></path>
+      </svg>`;
+      },
+      reset() {
+        return `<svg class="text-brand" width="28px" height="28px" viewBox="0 0 24 24">
+        <path fill="none" d="M0 0h24v24H0z"></path>
+        <path fill="currentColor" d="M18.3,5.7L18.3,5.7c-0.4-0.4-1-0.4-1.4,0L12,10.6L7.1,5.7c-0.4-0.4-1-0.4-1.4,0l0,0c-0.4,0.4-0.4,1,0,1.4l4.9,4.9l-4.9,4.9c-0.4,0.4-0.4,1,0,1.4h0c0.4,0.4,1,0.4,1.4,0l4.9-4.9l4.9,4.9c0.4,0.4,1,0.4,1.4,0l0,0c0.4-0.4,0.4-1,0-1.4L13.4,12l4.9-4.9C18.7,6.7,18.7,6.1,18.3,5.7z"></path>
+      </svg>`;
+      }
+    }
+  }),
+
+  instantsearch.widgets.refinementList({
+    container: '#filter-container',
+    attribute: 'section',
+    sortBy: ['name:asc'],
+    templates: {
+      item(item) {
+        const { url, label, count, isRefined } = item;
+        return `<label class="check-filter" for="site-${ label }"><input id="site-${ label }" type="checkbox" name="website" ${isRefined ? 'checked ' : ''}value="${ label }"><span class="check-filter-box"></span><span class="check-filter-text capitalize inline-block ml-10">${ label } (${count})</span></label>`;
+      }
+    }
+  }),
+
+  instantsearch.widgets.hits({
+    container: '#hits',
+    templates:  {
+
+      item(item) {
+          return `
+          <article class="border-t-2 border-light">
+            <a class="group block py-40 hover:text-brand focus:text-brand transition-colors" href="${ item.url }" target="_blank">
+              <p class="typo-h6 text-14 text-brand mb-6 capitalize">${ item.section }</p>
+              <p class="typo-h5 mb-6">${ instantsearch.highlight({ attribute: 'name', hit: item }) }<span class="inline-block text-brand relative top-4 left-8">{{ craft.supersearch.icon('arrow-right', 24) }}</span></p>
+              <p>${ item.content ? instantsearch.snippet({ attribute: 'content', hit: item }) : '' }</p>
+            </a>
+          </article>
+        `;
+      }
+    }
+  }),
+
+  instantsearch.widgets.pagination({
+    container: '#pagination',
+    cssClasses: {
+      root: 'mt-60',
+      list: 'text-center flex flex-wrap items-center justify-center text-18 font-semibold',
+      item: 'mx-4 flex items-center justify-center text-center text-black w-40 h-40 rounded-full transition-colors',
+      link: 'leading-[40px]',
+      selectedItem: 'bg-brand !text-white',
+      pageItem: 'hover:bg-grey focus:bg-grey',
+      firstPageItem: 'text-14 font-bold uppercase tracking-wider px-12 h-40 hover:text-brand focus:text-brand w-auto mr-40',
+      lastPageItem: 'text-14 font-bold uppercase tracking-wider px-12 h-40 hover:text-brand focus:text-brand w-auto ml-40',
+      nextPageItem: 'hover:bg-grey focus:bg-grey !text-brand',
+      previousPageItem: 'hover:bg-grey focus:bg-grey !text-brand',
+      disabledItem: 'hidden',
+
+    },
+    templates: {
+      first: `<span class="inline-block relative pr-4 top-6">{{ craft.supersearch.icon('chevron-left', 24) }}</span>{{ 'First'|t }}`,
+      previous: `{{ craft.supersearch.icon('arrow-left', 24) }}`,
+      next: `{{ craft.supersearch.icon('arrow-right', 24) }}`,
+      last: `{{ 'Last'|t }}<span class="inline-block relative pl-4 top-6">{{ craft.supersearch.icon('chevron-right', 24) }}</span>`
+    }
+  }),
+
+]);
+
+search.start();
+</script>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+defaultPlacement: end
+enableVersioning: true
+handle: blog
+name: Blog
+propagationMethod: all
+siteSettings:
+  5dbfd761-5d6a-49ea-a0e9-e866c1c88e0f: # Ice & Dice
+    enabledByDefault: true
+    hasUrls: true
+    template: entries/_blog.twig
+    uriFormat: 'blog/{slug}'
+type: channel

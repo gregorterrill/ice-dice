@@ -1,0 +1,25 @@
+<div class="container">
+
+  <div class="max-w-screen-lg mx-auto mt-40">
+
+  {% set staff = craft.entries.section('staff').orderBy('postDate ASC').collect() %}
+  {% for person in staff %}
+    <div id="{{ person.slug }}" class="flex items-start mb-60 pb-60 border-b-3 border-light">
+      <div class="flex-shrink-0 bg-dark w-200 h-200 relative rounded-lg overflow-hidden">
+        <img src="{{ person.photo.one().url }}" class="absolute inset-0 object-cover" />
+      </div>
+      <div class="pl-40 flex-grow">
+        <h2 class="typo-h4 mb-12">{{ person.title }}</h2>
+        <p class="typo-h6">{{ person.position }}</p>
+        <div class="py-24">{{ person.description }}</div>
+        <div class="flex items-center flex-wrap mt-8">
+          <p class="typo-h6 block w-full">{{ person.title|split(' ')[0] }}'s Favourite Games</p>
+          {% for game in person.favoriteGames.all() %}
+          <a href="{{ craft.supersearch.getResultLink(game) }}" class="inline-block mr-4 mt-4 bg-dark/60 hover:bg-brand rounded-lg px-6 py-4 text-12 text-white font-bold uppercase">{{ game.title }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  </div>
+</div>

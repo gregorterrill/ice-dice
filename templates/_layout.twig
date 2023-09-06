@@ -1,0 +1,48 @@
+{% set bodyClasses = 'lang-' ~ craft.app.language|slice(0,2) ~ ' font-body bg-white' %}
+{% if craft.app.request.isLivePreview %}
+	{% set bodyClasses = bodyClasses ~ ' live-preview' %}
+{% endif %}
+{% if entry is defined %}
+	{% set bodyClasses = bodyClasses ~ ' section-' ~ entry.section.handle ~ ' type-' ~ entry.type.handle %}
+	{% if entry.slug == '__home__' %}
+		{% set bodyClasses = bodyClasses ~ ' home' %}
+	{% endif %}
+{% endif %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{ craft.app.language }}">
+	<head>
+    {# Meta and JSON-LD #}
+    {#
+    {% include 'globals/_meta' %} 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Poppins:wght@400;600" rel="stylesheet">
+    #}
+
+    {% set craftGlobalsJs %}
+    window.csrfTokenName = "{{ craft.app.config.general.csrfTokenName|e('js') }}"; 
+    window.csrfTokenValue = "{{ craft.app.request.csrfToken|e('js') }}";
+    window.baseAjaxUrl = "{{ (siteUrl()|split('?'))[0] }}";
+    {% endset %}
+    {% do view.registerJs(craftGlobalsJs, POS_HEAD) %}
+
+		{% do view.registerCssFile("/dist/css/styles.css?v=" ~ getenv('STATIC_ASSET_VERSION')) %}
+		{% do view.registerJsFile("/dist/js/global.js?v=" ~ getenv('STATIC_ASSET_VERSION')) %}
+	</head>
+	<body id="top" class="{{ bodyClasses }} text-black bg-light" data-modal-open="false">
+
+    <div class="wrapper">
+
+      {% include 'globals/_nav' %}
+
+      {% block content %}
+        {# Content will be added here #}
+      {% endblock %}
+
+      {% include 'globals/_footer' %}
+
+    </div>
+
+	</body>
+</html>

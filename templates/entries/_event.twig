@@ -1,0 +1,30 @@
+{% extends '_layout' %}
+
+
+{% block content %}
+<main class="">
+  <div class="container">
+
+    <div class="max-w-screen-lg mx-auto">
+      <h1 class="typo-h1 mb-12">{{ entry.title }}</h1>
+      {% if entry.type.handle == 'weeklyEvent' %}
+      <div>
+        <p class="text-brand typo-lead">Every {{ entry.dayOfWeek.label }} at {{ entry.startTime }}</p>
+      </div>
+      {% else %}
+      <div>
+        <p class="text-brand typo-lead">{{ entry.startDate|date('F j, Y \\a\\t H:i A') }}</p>
+      </div>
+      {% endif %}
+      <div class="typography mt-40">
+        {{ entry.description }}
+      </div>
+
+      <a class="typo-h6 mt-40 block" href="{{ siteUrl('event-calendar') }}"><span class="inline-block mr-4 relative top-4">{{ craft.supersearch.icon('arrow-left', 20) }}</span> Back to event calendar</a>
+
+    </div>
+
+    
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,12 @@
+defaultPlacement: end
+enableVersioning: true
+handle: staff
+name: Staff
+propagationMethod: all
+siteSettings:
+  5dbfd761-5d6a-49ea-a0e9-e866c1c88e0f: # Ice & Dice
+    enabledByDefault: true
+    hasUrls: false
+    template: null
+    uriFormat: null
+type: channel

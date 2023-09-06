@@ -1,0 +1,15 @@
+defaultPlacement: end
+enableVersioning: true
+handle: menu
+name: Menu
+propagationMethod: all
+siteSettings:
+  5dbfd761-5d6a-49ea-a0e9-e866c1c88e0f: # Ice & Dice
+    enabledByDefault: true
+    hasUrls: false
+    template: null
+    uriFormat: null
+structure:
+  maxLevels: 2
+  uid: 13db956b-9e99-4095-b0f7-7032d1ca4e6f
+type: structure

@@ -1,0 +1,46 @@
+{% extends '_layout' %}
+
+
+{% set searchTerm = craft.app.request.param('query') %}
+
+{% block content %}
+<main class="">
+
+  <div class="container pb-40">
+    <h1 class="typo-h1">Search results for "{{ searchTerm }}"</h1>
+
+    {% set results = craft.entries().search(searchTerm).orderBy('score desc, title asc').collect() %}
+    {% if results|length %}
+    <table class="w-full text-left my-40">
+      <thead>
+        <tr class="border border-light bg-light">
+          <th class="px-8 py-4">Element ID</th>
+          <th class="px-8 py-4">Title</th>
+          <th class="px-8 py-4">Slug</th>
+          <th class="px-8 py-4">Section</th>
+          <th class="px-8 py-4">Score</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+        {% for result in results %}
+        <tr class="border border-light">
+          <td class="border border-light px-8 py-4">{{ result.id }}</td>
+          <td class="border border-light px-8 py-4">
+            <a class="text-brand hover:text-brand-dark" href="{{ craft.supersearch.getResultLink(result) }}">{{ result.title }}</a>
+          </td>
+          <td class="border border-light px-8 py-4">{{ result.slug }}</td>
+          <td class="border border-light px-8 py-4">{{ result.section }}</td>
+          <td class="border border-light px-8 py-4">{{ result.searchScore }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p class="my-40">No results found.</p>
+    {% endif %}
+
+  </div>
+  
+</main>
+{% endblock %}

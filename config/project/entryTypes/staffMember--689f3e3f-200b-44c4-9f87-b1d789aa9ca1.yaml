@@ -1,0 +1,91 @@
+fieldLayouts:
+  ea490bc0-46b2-4aba-a0ad-10431850dade:
+    tabs:
+      -
+        elementCondition: null
+        elements:
+          -
+            autocapitalize: true
+            autocomplete: false
+            autocorrect: true
+            class: null
+            disabled: false
+            elementCondition: null
+            id: null
+            instructions: null
+            label: Name
+            max: null
+            min: null
+            name: null
+            orientation: null
+            placeholder: null
+            readonly: false
+            requirable: false
+            size: null
+            step: null
+            tip: null
+            title: null
+            type: craft\fieldlayoutelements\entries\EntryTitleField
+            uid: 34651f34-8f37-4221-8731-6ccbe3bcdc4c
+            userCondition: null
+            warning: null
+            width: 50
+          -
+            elementCondition: null
+            fieldUid: 02d6aa36-7d78-491c-b542-e98659732e71 # Position
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: e2111c0a-f6f6-49e9-8f4e-7160ff7c39ba
+            userCondition: null
+            warning: null
+            width: 50
+          -
+            elementCondition: null
+            fieldUid: 58a8e6ee-7db0-4c88-96b0-1eaf015c0933 # Photo
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 03df997c-16bd-4b00-8d22-6c5f71114559
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: 377046e5-7ec5-47a1-b3b4-d8e9ab8903cb # Description
+            instructions: null
+            label: Bio
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 54f84330-e263-4ede-bae6-db0d0bc82d1c
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: 99ce7801-e5e9-49bc-b6ea-ce321d52fcca # Favorite Games
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 447ec490-2157-46ba-b696-2eab60c0a636
+            userCondition: null
+            warning: null
+            width: 100
+        name: Content
+        uid: b2399408-7a73-4a25-ad1b-beaea2dcfa21
+        userCondition: null
+handle: staffMember
+hasTitleField: true
+name: 'Staff Member'
+section: d36203e7-a2c8-446e-b9fc-8b7d2dce701b # Staff
+sortOrder: 1
+titleFormat: null
+titleTranslationKeyFormat: null
+titleTranslationMethod: site

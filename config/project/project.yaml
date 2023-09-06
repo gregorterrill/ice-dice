@@ -1,0 +1,184 @@
+dateModified: 1693667890
+elementSources:
+  craft\elements\Entry:
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: '*'
+      tableAttributes:
+        - section
+        - postDate
+        - expiryDate
+        - link
+      type: native
+    -
+      heading: 'Content Types'
+      type: heading
+    -
+      defaultSort:
+        - structure
+        - asc
+      disabled: false
+      key: 'section:efadae87-ce47-4df9-9f15-38ce6f2f898c' # Pages
+      tableAttributes:
+        - postDate
+        - expiryDate
+        - link
+      type: native
+    -
+      defaultSort:
+        - structure
+        - asc
+      disabled: false
+      key: 'section:0fbedee6-67b3-4fb4-8396-b18f150b191b' # Menu
+      tableAttributes:
+        - 'field:7c8c4062-827a-4c4d-a875-f440ddad9ae9' # Price
+      type: native
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:d36203e7-a2c8-446e-b9fc-8b7d2dce701b' # Staff
+      tableAttributes:
+        - 'field:02d6aa36-7d78-491c-b542-e98659732e71' # Position
+        - 'field:99ce7801-e5e9-49bc-b6ea-ce321d52fcca' # Favorite Games
+      type: native
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:94f88125-a736-4275-abfc-535cda94c027' # Games
+      tableAttributes:
+        - 'field:a0d96c3a-398c-4931-bd13-cf9700fdff20' # Cover Image
+        - 'field:bb6a1fd5-3dec-449e-b43f-05898f032dde' # Game Tags
+        - 'field:1f273647-ee3f-4259-80c7-63e543290b83' # Min Players
+        - 'field:ca49915c-9362-48e2-8024-7d6537a359bc' # Max Players
+        - 'field:5ea2d0be-32e1-4a48-b6ad-f23ae42393c5' # Min Length
+        - 'field:96a74885-1135-4e53-8e10-50f80ca4fae8' # Max Length
+      type: native
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:1824540e-c0f3-439c-afd2-0a89d2f15259' # Blog
+      tableAttributes:
+        - postDate
+        - expiryDate
+        - link
+      type: native
+    -
+      defaultSort:
+        - postDate
+        - desc
+      disabled: false
+      key: 'section:9006d492-8fc8-4651-b6b9-76d7dd9105df' # Events
+      tableAttributes:
+        - type
+        - 'field:4b188e87-2539-40c9-aed6-3e8a86250737' # Day of Week
+        - 'field:e0493a47-0f48-4be1-aff8-55023a1ec8c4' # Start Time
+        - 'field:a9bea51c-40ef-4367-888c-df2f007a87f8' # Start Date
+        - 'field:30cf60a4-ec37-4826-883b-3471d8cdd4b6' # Duration
+      type: native
+email:
+  fromEmail: gterrill@alphabetcreative.com
+  fromName: 'Iced Dice'
+  transportType: craft\mail\transportadapters\Sendmail
+fs:
+  images:
+    hasUrls: true
+    name: Images
+    settings:
+      path: $ASSET_BASE_PATH
+    type: craft\fs\Local
+    url: $ASSET_BASE_URL
+meta:
+  __names__:
+    0fbedee6-67b3-4fb4-8396-b18f150b191b: Menu # Menu
+    1dfc37cf-929c-4a07-83ae-382cca4280b6: 'Game Tags' # Game Tags
+    1f273647-ee3f-4259-80c7-63e543290b83: 'Min Players' # Min Players
+    02d6aa36-7d78-491c-b542-e98659732e71: Position # Position
+    3b448104-4da5-4158-962c-62844d19deba: 'Index Type' # Index Type
+    4ae94014-6cd2-4a2d-ba17-bf04ee0ce7fc: 'Link Text' # Link Text
+    4b188e87-2539-40c9-aed6-3e8a86250737: 'Day of Week' # Day of Week
+    4fcf775a-f68c-4f3f-b0f7-eec5f8780dea: Item # Item
+    5dbfd761-5d6a-49ea-a0e9-e866c1c88e0f: 'Ice & Dice' # Ice & Dice
+    5ea2d0be-32e1-4a48-b6ad-f23ae42393c5: 'Min Length' # Min Length
+    6a31b0ab-a575-40c9-b6b0-943426fc9057: 'Simple (Links, Bold, Italic)' # Simple (Links, Bold, Italic)
+    7c8c4062-827a-4c4d-a875-f440ddad9ae9: Price # Price
+    30cf60a4-ec37-4826-883b-3471d8cdd4b6: Duration # Duration
+    38c5f3bc-6620-4f93-8a7e-26c7c9651181: 'One-Time Event' # One-Time Event
+    58a8e6ee-7db0-4c88-96b0-1eaf015c0933: Photo # Photo
+    94f88125-a736-4275-abfc-535cda94c027: Games # Games
+    95a06578-828b-4a98-931a-208eb04f2f93: 'Template Filename' # Template Filename
+    96a74885-1135-4e53-8e10-50f80ca4fae8: 'Max Length' # Max Length
+    99ce7801-e5e9-49bc-b6ea-ce321d52fcca: 'Favorite Games' # Favorite Games
+    202b5f13-3f26-4bef-a643-bf592b2cba08: 'Text Content' # Text Content
+    487eb461-dab4-4b85-ad69-638b5e6538b0: Game # Game
+    689f3e3f-200b-44c4-9f87-b1d789aa9ca1: 'Staff Member' # Staff Member
+    927a5a45-cf0c-49eb-9ca9-0090121e9c8b: Images # Images
+    9006d492-8fc8-4651-b6b9-76d7dd9105df: Events # Events
+    23107aa4-4dba-42d1-9478-9147f2d514f2: 'Page Content' # Page Content
+    58755d9e-c247-42e4-bdf5-5a87b084261e: 'Search Keywords' # Search Keywords
+    377046e5-7ec5-47a1-b3b4-d8e9ab8903cb: Description # Description
+    1824540e-c0f3-439c-afd2-0a89d2f15259: Blog # Blog
+    38155520-fd68-4533-a707-ea49a31dcfcf: Standard # Standard
+    62539415-cd17-4b7e-a855-2d9309860888: Links # Links
+    a0d96c3a-398c-4931-bd13-cf9700fdff20: 'Cover Image' # Cover Image
+    a9bea51c-40ef-4367-888c-df2f007a87f8: 'Start Date' # Start Date
+    a14ea08f-dd04-43bb-af14-7b5ab1042ebc: Page # Page
+    a56985a2-184b-4bef-a24f-0f64b22dd8eb: Image # Image
+    ab0c9f77-f93e-43b0-9551-ee2f0af0f57e: 'Linked Entry' # Linked Entry
+    afc42961-6ea3-4e96-ac04-ccf74057a9a9: 'Test Dropdown' # Test Dropdown
+    bb6a1fd5-3dec-449e-b43f-05898f032dde: 'Game Tags' # Game Tags
+    c0741afd-8d6d-4d7f-8380-02052e0593bf: Common # Common
+    c2fda93f-bd1a-4e3e-86c7-f6c00358b407: Index # Index
+    c6112f52-3fbd-4013-93bc-1bd5becc7e4d: Heading # Heading
+    ca49915c-9362-48e2-8024-7d6537a359bc: 'Max Players' # Max Players
+    ce25ac28-5e4c-4c4f-bdb9-69f08b664737: Text # Text
+    cec31bbc-3737-4f81-9d1a-dc9db605ad2a: Category # Category
+    cfe24d86-a6f3-48b7-9cb1-c65838ed2d12: Primary # Primary
+    d36203e7-a2c8-446e-b9fc-8b7d2dce701b: Staff # Staff
+    e0493a47-0f48-4be1-aff8-55023a1ec8c4: 'Start Time' # Start Time
+    e30f72e7-5c18-45a2-bf4f-d84663a9ae96: 'Blog Post' # Blog Post
+    e394bb77-5573-4b68-983b-2a40b765ba41: Image # Image
+    efadae87-ce47-4df9-9f15-38ce6f2f898c: Pages # Pages
+    f54a86b5-8677-40ad-8680-56e3d5339ff9: 'Blog Image' # Blog Image
+    f70ad2cb-b99c-4fd3-b0b2-1c6b5c94503f: 'Weekly Event' # Weekly Event
+    f546de82-cde3-47c7-9702-054793adf7c8: Links # Links
+    fb4c8a24-8e17-4211-b6d5-12961badb4bf: 'Icon Slug' # Icon Slug
+plugins:
+  ckeditor:
+    edition: standard
+    enabled: true
+    schemaVersion: 3.0.0.0
+  feed-me:
+    edition: standard
+    enabled: true
+    schemaVersion: 5.1.0.0
+  seomatic:
+    edition: standard
+    enabled: false
+    licenseKey: 9ZXEX3VKTO38CKODB5NSFTB6
+    schemaVersion: 3.0.12
+  super-table:
+    edition: standard
+    enabled: true
+    schemaVersion: 3.0.0
+system:
+  edition: solo
+  live: true
+  name: 'Ice & Dice'
+  retryDuration: null
+  schemaVersion: 4.5.3.0
+  timeZone: America/Los_Angeles
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  requireEmailVerification: true

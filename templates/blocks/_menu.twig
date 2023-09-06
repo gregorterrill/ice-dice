@@ -1,0 +1,24 @@
+<div class="container">
+
+  <div class="columns-2 gap-60">
+
+  {% set categories = craft.entries.section('menu').level(1).orderBy('lft ASC').all() %}
+  {% for cat in categories %}
+  <div id="{{ cat.slug }}" class="break-inside-avoid pb-32">
+    <h2 class="typo-h3 mb-20">{{ cat.title }}</h2>
+    {% for item in cat.children.orderBy('lft ASC').all() %}
+    <div id="{{ item.slug }}" class="mb-12">
+      <div class="flex border-b border-light w-full justify-between items-end mb-4">
+        <p class="text-left">{{ item.title }}</p>
+        <p class="text-right">{{ item.price|money }}</p>
+      </div>
+      {% if item.description %}
+      <div class="text-dark/50 italic text-15">{{ item.description }}</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
+
+  </div>
+</div>

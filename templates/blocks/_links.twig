@@ -1,0 +1,18 @@
+<div class="container">
+
+  {% if heading %}
+  <h2 class="typo-h2">{{ heading }}</h2>
+  {% endif %}
+
+  <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-24">
+
+  {% for link in links %}
+    <a href="{{ link.linkedEntry.one().url }}" class="group relative bg-brand flex flex-wrap p-40">
+      <span class="absolute right-40 top-1/2 -mt-32 text-white opacity-50 origin-center group-hover:scale-125 group-hover:opacity-100 transition-all">{{ craft.supersearch.icon(link.iconSlug, 64) }}</span>
+      <span class="typo-lead">{{ link.linkText }}</span>
+      <span class="inline-block relative top-3 left-6 group-hover:left-12 transition-all">{{ craft.supersearch.icon('arrow-right', 24) }}</span>
+    </a>
+  {% endfor %}
+
+  </div>
+</div>
