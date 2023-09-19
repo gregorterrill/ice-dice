@@ -60,7 +60,7 @@
   {# SHOW RESULTS #}
   {% set games = games.orderBy('title ASC').collect() %}
   {% for game in games %}
-    <div id="game-{{ game.id }}" class="flex items-center p-24 bg-white rounded-lg shadow">
+    <{% if game.bggLink %}a target="_blank" href="{{ game.bggLink ?? '#' }}"{% else %}div{% endif %} id="game-{{ game.id }}" class="relative group flex items-center p-24 bg-white rounded-lg shadow">
       {% set coverImage = game.coverImage.one() %}
       <img class="h-120 w-auto rounded-sm" src="{{ coverImage.url ?? '' }}" alt="{{ game.title }} box cover" />
       <div class="pl-24 flex-grow">
@@ -72,9 +72,11 @@
           <div class="inline-block mr-4 mt-4 bg-dark/60 rounded-lg px-6 py-4 text-12 text-white font-bold uppercase">{{ tag.title }}</div>
           {% endfor %}
         </div>
+        {% if game.bggLink %}
+        <span class="absolute top-12 right-12 text-brand group-hover:text-brand-dark transition-colors">{{ craft.supersearch.icon('external-link', 20) }}</span>
+        {% endif %}
       </div>
-      
-    </div>
+    {% if game.bggLink %}</a>{% else %}</div>{% endif %}
   {% endfor %}
   </div>
 </div>

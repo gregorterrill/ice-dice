@@ -18,7 +18,7 @@ settings:
   maintainHierarchy: false
   maxRelations: null
   minRelations: null
-  previewMode: full
+  previewMode: thumbs
   restrictFiles: true
   restrictLocation: false
   restrictedDefaultUploadSubpath: null
@@ -36,7 +36,7 @@ settings:
         - class
         - craft\elements\conditions\assets\AssetCondition
   selectionLabel: null
-  showSiteMenu: false
+  showSiteMenu: true
   showUnpermittedFiles: false
   showUnpermittedVolumes: false
   sources:

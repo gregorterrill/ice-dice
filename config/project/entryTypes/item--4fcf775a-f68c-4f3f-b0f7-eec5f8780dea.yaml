@@ -56,6 +56,11 @@ fieldLayouts:
             width: 100
           -
             elementCondition: null
+            type: craft\fieldlayoutelements\HorizontalRule
+            uid: 5a700407-6841-41f6-b00d-ea5f93fbe111
+            userCondition: null
+          -
+            elementCondition: null
             fieldUid: 58755d9e-c247-42e4-bdf5-5a87b084261e # Search Keywords
             instructions: null
             label: null
@@ -63,6 +68,18 @@ fieldLayouts:
             tip: null
             type: craft\fieldlayoutelements\CustomField
             uid: 3abc2880-876b-45f9-bc4a-be51961d517d
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: d2fc72a6-7afb-4312-a039-45db63a8cc16 # Prevent Indexing
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 153bf48c-bf45-4514-ac42-097cf77fb0f1
             userCondition: null
             warning: null
             width: 100

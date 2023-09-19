@@ -66,6 +66,35 @@ fieldLayouts:
             userCondition: null
             warning: null
             width: 50
+          -
+            elementCondition: null
+            type: craft\fieldlayoutelements\HorizontalRule
+            uid: 0337e472-a264-42ab-a0d9-6d97f83a7812
+            userCondition: null
+          -
+            elementCondition: null
+            fieldUid: 58755d9e-c247-42e4-bdf5-5a87b084261e # Search Keywords
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 8879fa65-b6a1-411d-a7a4-ff773f61084f
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: d2fc72a6-7afb-4312-a039-45db63a8cc16 # Prevent Indexing
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 6526d420-6a7c-4b71-b94d-67356a79855a
+            userCondition: null
+            warning: null
+            width: 100
         name: Content
         uid: 03664ba2-0168-487f-b0f9-ae509391e5c5
         userCondition: null
@@ -73,6 +102,9 @@ handle: oneTimeEvent
 hasTitleField: true
 name: 'One-Time Event'
 section: 9006d492-8fc8-4651-b6b9-76d7dd9105df # Events
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 2
 titleFormat: null
 titleTranslationKeyFormat: null

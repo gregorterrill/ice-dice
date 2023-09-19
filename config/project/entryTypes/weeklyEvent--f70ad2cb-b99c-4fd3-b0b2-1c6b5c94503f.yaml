@@ -78,6 +78,35 @@ fieldLayouts:
             userCondition: null
             warning: null
             width: 50
+          -
+            elementCondition: null
+            type: craft\fieldlayoutelements\HorizontalRule
+            uid: ac61ff9f-41ab-4fd9-9f0f-20673c1746c4
+            userCondition: null
+          -
+            elementCondition: null
+            fieldUid: 58755d9e-c247-42e4-bdf5-5a87b084261e # Search Keywords
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: b2780746-98a6-4ce9-9054-d40edf6299b0
+            userCondition: null
+            warning: null
+            width: 100
+          -
+            elementCondition: null
+            fieldUid: d2fc72a6-7afb-4312-a039-45db63a8cc16 # Prevent Indexing
+            instructions: null
+            label: null
+            required: false
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            uid: 75efe9f0-d3f8-45ae-aeef-a8ea32e56db8
+            userCondition: null
+            warning: null
+            width: 100
         name: Content
         uid: 40ec2ed4-9810-4c78-b616-88439aa4a381
         userCondition: null
@@ -85,6 +114,9 @@ handle: weeklyEvent
 hasTitleField: true
 name: 'Weekly Event'
 section: 9006d492-8fc8-4651-b6b9-76d7dd9105df # Events
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 1
 titleFormat: null
 titleTranslationKeyFormat: null

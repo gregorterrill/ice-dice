@@ -59,8 +59,11 @@ var handleInput = /*#__PURE__*/function () {
             autocompleteResults.classList.remove('hidden');
             for (i = 0; i < response.length; i++) {
               li = document.createElement('li');
-              highlightedTitle = '<a class="relative block w-full cursor-pointer py-6 pl-12 pr-40" title="' + response[i].title + '" href="' + ((_response$i$url = response[i].url) !== null && _response$i$url !== void 0 ? _response$i$url : '#') + '">';
-              highlightedTitle += '<span class="absolute left-8 top-8 inline-block w-20 h-20">' + response[i].icon + '</span><span class="inline-block pl-24">';
+              highlightedTitle = '<a class="relative block w-full cursor-pointer py-6 pl-12 pr-40 after:absolute after:inset-0 after:pointer-events-none after:z-20 after:opacity-0 after:bg-brand hover:after:opacity-50 focus:after:opacity-50" href="' + ((_response$i$url = response[i].url) !== null && _response$i$url !== void 0 ? _response$i$url : '#') + '">';
+              if (response[i].image) {
+                highlightedTitle += '<div class="absolute right-0 inset-y-0 w-160 z-10 after:w-160 after:h-full after:inset-0 after:absolute after:bg-gradient-to-r after:from-white/100 after:to-white/20"><img src="' + response[i].image + '" class="absolute w-full h-full object-cover object-center" /></div>';
+              }
+              highlightedTitle += '<span class="absolute left-8 top-8 inline-block w-20 h-20 z-30">' + response[i].icon + '</span><span class="inline-block pl-24 relative z-30">';
               queryIntersection = response[i].title.toLowerCase().indexOf(query.toLowerCase());
               if (response[i].title.toLowerCase().indexOf(query.toLowerCase()) !== -1) {
                 highlightedTitle += response[i].title.substr(0, queryIntersection) + '<strong>' + response[i].title.substr(queryIntersection, query.length) + '</strong>' + response[i].title.substr(queryIntersection + query.length) + '</span></a>';
@@ -97,6 +100,11 @@ searchInput.addEventListener('keydown', function (e) {
     }
   }
 });
+document.addEventListener('keydown', function (e) {
+  if (e.key == 'Escape') {
+    clearAutocompleteList();
+  }
+});
 function clearAutocompleteList() {
   focusedResult = -1;
   autocompleteResults.innerHTML = '';
@@ -105,12 +113,14 @@ function clearAutocompleteList() {
 function highlightActiveResult(results) {
   if (!results) return false;
   autocompleteResults.querySelectorAll('li').forEach(function (el) {
-    return el.classList.remove('bg-brand', 'text-white');
+    return el.querySelector('a').classList.remove('after:!opacity-50');
   });
   if (focusedResult >= results.length) focusedResult = 0;
   if (focusedResult < 0) focusedResult = results.length - 1;
-  results[focusedResult].classList.add('bg-brand', 'text-white');
+  results[focusedResult].querySelector('a').classList.add('after:!opacity-50');
 }
+
+// Game filters just reload the page on any change
 if (gameFilters) {
   var inputs = gameFilters.querySelectorAll('input');
   var _iterator = _createForOfIteratorHelper(inputs),
@@ -119,6 +129,7 @@ if (gameFilters) {
     for (_iterator.s(); !(_step = _iterator.n()).done;) {
       var input = _step.value;
       input.addEventListener('change', function (e) {
+        window.location.hash = '';
         gameFilters.submit();
       });
     }
@@ -129,6 +140,8 @@ if (gameFilters) {
   }
 }
 var selectedItem = null;
+
+// Highlight item with ID matching hash on pageload
 if (window.location.hash) {
   selectedItem = document.getElementById(window.location.hash.slice(1));
   selectedItem.classList.add('outline', 'outline-brand');
@@ -138,6 +151,8 @@ if (window.location.hash) {
     once: true
   });
 }
+
+// If the hash changes, update the highlighted item
 window.addEventListener('hashchange', function () {
   selectedItem = document.getElementById(window.location.hash.slice(1));
   selectedItem.classList.add('outline', 'outline-brand');

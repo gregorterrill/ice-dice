@@ -44,6 +44,11 @@ fieldLayouts:
             width: 100
           -
             elementCondition: null
+            type: craft\fieldlayoutelements\HorizontalRule
+            uid: b99eaa8b-ae29-45a1-baea-9620916486a9
+            userCondition: null
+          -
+            elementCondition: null
             fieldUid: 58755d9e-c247-42e4-bdf5-5a87b084261e # Search Keywords
             instructions: null
             label: null
@@ -56,13 +61,13 @@ fieldLayouts:
             width: 100
           -
             elementCondition: null
-            fieldUid: ee2fe222-368d-444e-9c71-c1984c584e46
+            fieldUid: d2fc72a6-7afb-4312-a039-45db63a8cc16 # Prevent Indexing
             instructions: null
             label: null
             required: false
             tip: null
             type: craft\fieldlayoutelements\CustomField
-            uid: c4b2498f-ea00-4422-aebc-d74b9a44cead
+            uid: 8cdb8146-8072-41cd-99bf-4caeaa682866
             userCondition: null
             warning: null
             width: 100
@@ -73,6 +78,9 @@ handle: page
 hasTitleField: true
 name: Page
 section: efadae87-ce47-4df9-9f15-38ce6f2f898c # Pages
+showStatusField: true
+slugTranslationKeyFormat: null
+slugTranslationMethod: site
 sortOrder: 1
 titleFormat: null
 titleTranslationKeyFormat: null

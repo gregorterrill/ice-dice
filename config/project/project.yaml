@@ -1,4 +1,4 @@
-dateModified: 1693667890
+dateModified: 1694802184
 elementSources:
   craft\elements\Entry:
     -
@@ -10,7 +10,7 @@ elementSources:
       tableAttributes:
         - section
         - postDate
-        - expiryDate
+        - 'field:58755d9e-c247-42e4-bdf5-5a87b084261e' # Search Keywords
         - link
       type: native
     -
@@ -24,7 +24,7 @@ elementSources:
       key: 'section:efadae87-ce47-4df9-9f15-38ce6f2f898c' # Pages
       tableAttributes:
         - postDate
-        - expiryDate
+        - 'field:58755d9e-c247-42e4-bdf5-5a87b084261e' # Search Keywords
         - link
       type: native
     -
@@ -45,6 +45,7 @@ elementSources:
       tableAttributes:
         - 'field:02d6aa36-7d78-491c-b542-e98659732e71' # Position
         - 'field:99ce7801-e5e9-49bc-b6ea-ce321d52fcca' # Favorite Games
+        - 'field:58755d9e-c247-42e4-bdf5-5a87b084261e' # Search Keywords
       type: native
     -
       defaultSort:
@@ -59,6 +60,7 @@ elementSources:
         - 'field:ca49915c-9362-48e2-8024-7d6537a359bc' # Max Players
         - 'field:5ea2d0be-32e1-4a48-b6ad-f23ae42393c5' # Min Length
         - 'field:96a74885-1135-4e53-8e10-50f80ca4fae8' # Max Length
+        - 'field:58755d9e-c247-42e4-bdf5-5a87b084261e' # Search Keywords
       type: native
     -
       defaultSort:
@@ -67,8 +69,9 @@ elementSources:
       disabled: false
       key: 'section:1824540e-c0f3-439c-afd2-0a89d2f15259' # Blog
       tableAttributes:
+        - 'field:f54a86b5-8677-40ad-8680-56e3d5339ff9' # Blog Image
         - postDate
-        - expiryDate
+        - 'field:58755d9e-c247-42e4-bdf5-5a87b084261e' # Search Keywords
         - link
       type: native
     -
@@ -83,6 +86,7 @@ elementSources:
         - 'field:e0493a47-0f48-4be1-aff8-55023a1ec8c4' # Start Time
         - 'field:a9bea51c-40ef-4367-888c-df2f007a87f8' # Start Date
         - 'field:30cf60a4-ec37-4826-883b-3471d8cdd4b6' # Duration
+        - link
       type: native
 email:
   fromEmail: gterrill@alphabetcreative.com
@@ -99,6 +103,7 @@ fs:
 meta:
   __names__:
     0fbedee6-67b3-4fb4-8396-b18f150b191b: Menu # Menu
+    1be7b099-0a8c-4342-a1b3-4557308bd7cb: 'BGG Link' # BGG Link
     1dfc37cf-929c-4a07-83ae-382cca4280b6: 'Game Tags' # Game Tags
     1f273647-ee3f-4259-80c7-63e543290b83: 'Min Players' # Min Players
     02d6aa36-7d78-491c-b542-e98659732e71: Position # Position
@@ -133,7 +138,6 @@ meta:
     a14ea08f-dd04-43bb-af14-7b5ab1042ebc: Page # Page
     a56985a2-184b-4bef-a24f-0f64b22dd8eb: Image # Image
     ab0c9f77-f93e-43b0-9551-ee2f0af0f57e: 'Linked Entry' # Linked Entry
-    afc42961-6ea3-4e96-ac04-ccf74057a9a9: 'Test Dropdown' # Test Dropdown
     bb6a1fd5-3dec-449e-b43f-05898f032dde: 'Game Tags' # Game Tags
     c0741afd-8d6d-4d7f-8380-02052e0593bf: Common # Common
     c2fda93f-bd1a-4e3e-86c7-f6c00358b407: Index # Index
@@ -142,6 +146,7 @@ meta:
     ce25ac28-5e4c-4c4f-bdb9-69f08b664737: Text # Text
     cec31bbc-3737-4f81-9d1a-dc9db605ad2a: Category # Category
     cfe24d86-a6f3-48b7-9cb1-c65838ed2d12: Primary # Primary
+    d2fc72a6-7afb-4312-a039-45db63a8cc16: 'Prevent Indexing' # Prevent Indexing
     d36203e7-a2c8-446e-b9fc-8b7d2dce701b: Staff # Staff
     e0493a47-0f48-4be1-aff8-55023a1ec8c4: 'Start Time' # Start Time
     e30f72e7-5c18-45a2-bf4f-d84663a9ae96: 'Blog Post' # Blog Post
@@ -158,7 +163,7 @@ plugins:
     schemaVersion: 3.0.0.0
   feed-me:
     edition: standard
-    enabled: true
+    enabled: false
     schemaVersion: 5.1.0.0
   seomatic:
     edition: standard

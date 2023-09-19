@@ -8,13 +8,6 @@ use yii\base\Event;
 
 use Meilisearch\Client as MeilisearchClient;
 use Algolia\AlgoliaSearch\SearchClient as AlgoliaClient;
-use Symfony\Component\HttpClient\HttplugClient;
-use Typesense\Client as TypesenseClient;
-
-use yii\log\Logger;
-use craft\log\MonologTarget;
-use Monolog\Formatter\LineFormatter;
-use Psr\Log\LogLevel;
 
 use craft\elements\Entry;
 use craft\helpers\ElementHelper;
@@ -61,9 +54,6 @@ class SuperSearchModule extends \yii\base\Module
 
     parent::init();
 
-    // Logging Helper
-    $this->_registerLogTarget();
-
      // Custom variables for use in Twig
     Event::on(
       CraftVariable::class,
@@ -74,168 +64,26 @@ class SuperSearchModule extends \yii\base\Module
       }
     );
 
-
-    // External Search
-    $this->_registerIndexWithExternalServicesOnSave();
-
     // Indexing Events
-    $this->_registerBeforeUpdateSearchIndex();
-    $this->_registerRegisterSearchableAttributes();
-    $this->_registerDefineAttributeKeywords();
-    $this->_registerDefineFieldKeywords();
-    $this->_registerBeforeIndexKeywords();
+    // $this->_registerBeforeUpdateSearchIndex();
+    // $this->_registerRegisterSearchableAttributes();
+    // $this->_registerDefineAttributeKeywords();
+    // $this->_registerDefineFieldKeywords();
+    // $this->_registerBeforeIndexKeywords();
 
     // Search Events
-    //$this->_registerBeforeSearch();
     //$this->_registerBeforeScoreResults();
     //$this->_registerAfterSearch();
 
-  }
+    // External Search
+    //$this->_registerIndexWithExternalServicesOnSave();
 
-  /**
-   * Registers a custom log target, keeping the format as simple as possible.
-   */
-  private function _registerLogTarget(): void
-  {
-    Craft::getLogger()->dispatcher->targets[] = new MonologTarget([
-      'name' => 'supersearch',
-      'categories' => ['supersearch'],
-      'level' => LogLevel::INFO,
-      'logContext' => false,
-      'allowLineBreaks' => false,
-      'formatter' => new LineFormatter(
-        format: "%datetime% %message%\n",
-        dateFormat: 'Y-m-d H:i:s',
-      ),
-    ]);
-  }
-
-  /**
-   * Logs a message to our custom Monolog target (/storage/logs/supersearch-YYYY-MM-DD.log)
-   * Call from anywhere in the module with SuperSearchModule::getInstance()->log($message);
-   * For more info see https://putyourlightson.com/articles/adding-logging-to-craft-plugins-with-monolog
-   */
-  public function log(string $message, int $type = Logger::LEVEL_INFO): void
-  {
-    Craft::getLogger()->log($message, $type, 'supersearch');
-  }
-
-  // Save entries to Meilisearch and Algolia on save
-  // Run Meilisearch with:  ~/Projects/meilisearch/meilisearch --master-key 58zmbORuI01yOiho0qNGO1xj5lK3D9KX76npjWEu2wQ
-  // Reindex with:  php craft resave/entries --updateSearchIndex
-  private function _registerIndexWithExternalServicesOnSave(): void
-  {
-    Event::on(
-      Entry::class,
-      Entry::EVENT_AFTER_SAVE,
-      function (ModelEvent $event) {       
-        $entry = $event->sender;   
-
-        if (ElementHelper::isDraft($entry) || ElementHelper::isRevision($entry)) return;
-
-        $meilisearchClient = new MeilisearchClient(getenv('MEILISEARCH_DOMAIN'), getenv('MEILISEARCH_KEY'));
-        $meilisearchIndex = $meilisearchClient->index(getenv('EXTERNAL_SEARCH_INDEX'));
-
-        $algoliaClient = AlgoliaClient::create(getenv('ALGOLIA_APPLICATION_ID'), getenv('ALGOLIA_ADMIN_API_KEY'));
-        $algoliaIndex = $algoliaClient->initIndex(getenv('EXTERNAL_SEARCH_INDEX'));
-
-        // $typesenseClient = new TypeSenseClient(
-        //   [
-        //     'api_key'         => getenv('TYPESENSE_API_KEY'),
-        //     'nodes'           => [
-        //       [
-        //         'host'     => 'localhost',
-        //         'port'     => '8108',
-        //         'protocol' => 'http',
-        //       ],
-        //     ],
-        //     'connection_timeout_seconds' => 2,
-        //   ]
-        // );
-
-        $entryData = $this->_transformEntryData($entry);
-
-        if ('live' == $entry->status) {
-          $algoliaIndex->saveObject($entryData, ['objectIDKey' => 'id']);
-          $meilisearchIndex->addDocuments([$entryData]);
-          //$typesenseClient->collections[$entry->section->handle]->documents->create($entryData);
-        } else {
-          $algoliaIndex->deleteObject($entryData['id']);
-          $meilisearchClient->deleteDocument((int)$entryData['id']);
-          //$typesenseClient->collections[$entry->section->handle]->documents[(string)$entryData['id']]->delete();
-        }
-
-      }
-    );
-  }
-
-  private function _transformEntryData($entry): array
-  {
-    $variable = new SuperSearchVariable;
-
-    $entryData = [
-      'id' => $entry->id,
-      'section' => $entry->section->handle,
-      'name' => $entry->title,
-      'slug' => $entry->slug,
-      'url' => $variable->getResultLink($entry),
-      'postDate' => $entry->postDate->format('Y-m-d')
-    ];
-
-    if ($entry->extraSearchKeywords) {
-      $entryData['keywords'] = $entry->extraSearchKeywords;
-    }
-
-    if ($entry->section->handle == 'games') {
-      $entryData['boxCover'] = $entry->coverImage->one()->url;
-      $entryData['minPlayers'] = $entry->minPlayers;
-      $entryData['maxPlayers'] = $entry->maxPlayers;
-      $entryData['minLength'] = $entry->minLength;
-      $entryData['maxLength'] = $entry->maxLength;
-      $entryData['tags'] = $entry->gameTags->collect()->map(function($item) {
-        return $item->title;
-      })->join(' ');
-
-    } elseif ($entry->section->handle == 'staff') {
-      $entryData['position'] = $entry->position;
-      $entryData['content'] = strip_tags($entry->description);
-      $entryData['favoriteGames'] = $entry->favoriteGames->collect()->map(function($item) {
-        return $item->title;
-      })->join(' ');
-
-    } elseif ($entry->section->handle == 'menu') {
-      $entryData['content'] = strip_tags($entry->description);
-      $entryData['price'] = $entry->price;
-
-      if ($entry->type->handle == 'item') {
-        $entryData['category'] = $entry->parent->title;
-      }
-
-    } elseif ($entry->section->handle == 'events') {
-
-      $entryData['content'] = strip_tags($entry->description);
-      if ($entry->type->handle == 'weeklyEvent') {
-        $entryData['dayOfWeek'] = $entry->dayOfWeek->label;
-        $entryData['startTime'] = $entry->startTime;
-      } else {
-        $entryData['startDate'] = $entry->startDate;
-      }
-      $entryData['duration'] = $entry->duration;
-
-    } elseif ($entry->section->handle == 'blog' || $entry->section->handle == 'pages') {
-      $entryData['content'] = implode(' ', array_map(function($matrixBlock) {
-        return strip_tags($matrixBlock->textContent);
-      }, $entry->pageContent->type('textContent')->all()));
-    
-    }
-
-    return $entryData;
   }
 
   // ----------------------------------------------------------------------------------------------[ INDEXING RELATED EVENTS ]
 
   /**
-   * EVENT_BEFORE_UPDATE_SEARCH_INDEX is not super useful - it can be used to prevent indexing
+   * EVENT_BEFORE_UPDATE_SEARCH_INDEX can be used to prevent indexing
    */
   private function _registerBeforeUpdateSearchIndex(): void
   {
@@ -246,9 +94,14 @@ class SuperSearchModule extends \yii\base\Module
 
         $element = $event->element;
 
-        // Prevent new "Staff" entries from ever being added to the searchindex 
+        // Prevent entries with "Prevent Indexing" lightswitch on from ever being added to the searchindex 
         // (note that this does NOT delete existing rows, even when resaving section via CLI)
-        // if ($element instanceof \craft\elements\Entry && $element->sectionId == 2) {
+        if ($element instanceof Entry && $element->preventIndexing == true) {
+          $event->isValid = false;
+        }
+
+        // Prevent new "Staff" entries from ever being added to the searchindex 
+        // if ($element instanceof Entry && $element->sectionId == 2) {
         //   $event->isValid = false;
         // }
       }
@@ -264,9 +117,7 @@ class SuperSearchModule extends \yii\base\Module
       Entry::class,
       Entry::EVENT_REGISTER_SEARCHABLE_ATTRIBUTES,
       function (RegisterElementSearchableAttributesEvent $event) {
-
         // Note that $event->sender is always null here, so we can't do any checking for entry type, section, etc.
-
         // Add a "Menu Category" attribute
         $event->attributes[] = 'menucategory';
       }
@@ -290,7 +141,7 @@ class SuperSearchModule extends \yii\base\Module
           $event->handled = true;
 
           // If this is a menuItem (7) in the menu section (6), handle "Menu Category" by getting the parent menu category and adding the word menu, plus the parent title
-          if ($element instanceof \craft\elements\Entry && $element->sectionId == 6 && $element->typeId == 7) {
+          if ($element instanceof Entry && $element->typeId == 7 && $element->sectionId == 6) {
             $event->keywords = 'menu ' . $element->parent->title;
           } else {
             // If it's not a menu item, it'll just end up with a blank row, but there's no way to prevent that here
@@ -333,18 +184,22 @@ class SuperSearchModule extends \yii\base\Module
       Search::EVENT_BEFORE_INDEX_KEYWORDS,
       function (IndexKeywordsEvent $event) {
         
-        $keywords = (string)$event->keywords;
+        // This is what we've got to work with
+        $element = $event->element;
+        $attribute = $event->attribute;
+        $fieldId = $event->fieldId;
+        $keywords = $event->keywords;
 
         // Prevent the blank "Menu Category" rows from being saved (on non-menu item entries, eg.)
-        if ($event->attribute == 'menucategory' && !$keywords) {
+        if ($attribute == 'menucategory' && !$keywords) {
           $event->isValid = false;
         }
 
         // If "hidden movement" appears in the "Game Tags" field - no it doesn't
-        if ($event->fieldId == 12 && str_contains($keywords, 'hidden movement')) {
-          $event->keywords = str_replace('hidden movement', '???', $keywords);
-
-          // If we want to prevent Game Tags fields containing "hidden movement" from ever being indexed, we can set this to false to prevent the row from saving
+        if ($fieldId == 12 && StringHelper::contains($keywords, 'hidden movement', false)) {
+          $event->keywords = StringHelper::replaceAll($event->keywords, 'hidden movement', '', false);
+          // If we wanted to prevent Game Tags fields containing "hidden movement" from ever being indexed, 
+          // we could set this to false to prevent the row from saving
           $event->isValid = true;
         }
       }
@@ -352,23 +207,6 @@ class SuperSearchModule extends \yii\base\Module
   }
 
   // ----------------------------------------------------------------------------------------------[ SEARCH QUERY RELATED EVENTS ]
-
-  /**
-   * EVENT_BEFORE_SEARCH is probably not really that useful?
-   */
-  private function _registerBeforeSearch(): void
-  {
-    Event::on(
-      Search::class,
-      Search::EVENT_BEFORE_SEARCH,
-      function (SearchEvent $event) {
-        $search = $event->sender;
-
-        // Nothing to do here
-
-      }
-    );
-  }
 
   /**
    * EVENT_BEFORE_SCORE_RESULTS is where you would manually calculate 
@@ -380,6 +218,14 @@ class SuperSearchModule extends \yii\base\Module
       Search::class,
       Search::EVENT_BEFORE_SCORE_RESULTS,
       function (SearchEvent $event) {
+
+        // If scores is set, Craft will NOT calculate scores
+        $event->scores = [
+          1133 => 1,
+          796 => 2,
+          1204 => 2
+        ];
+        return;
 
         // First we have to set up the terms and groups as Craft would do normally
         $this->_terms = [];
@@ -411,8 +257,7 @@ class SuperSearchModule extends \yii\base\Module
         }
 
         $event->results = $results;
-        $event->scores = $scores;
-        
+        $event->results = $scores;
       }
     );
   }
@@ -425,25 +270,38 @@ class SuperSearchModule extends \yii\base\Module
     Event::on(
       Search::class,
       Search::EVENT_AFTER_SEARCH,
-      function (SearchEvent $event) {
+      function (SearchEvent $event) {        
+        $elementQuery = $event->elementQuery; // Original ElementQuery instance
+        $searchQuery = $event->query; // SearchQuery instance, with parsed tokens
+        $userSearchTerms = $searchQuery->getQuery(); // What the user actually searched for
+        $siteId = $event->siteId; // Site(s) the search was performed in
+        $results = $event->results; // Raw index matches (there may be multiple rows per element)
+        $scores = $event->scores; // Corresponding element score totals, indexed by element ID - THIS IS WHAT WE CAN MODIFY HERE
 
-        foreach($event->scores as $elementId => $score) {
+        // Show Incan Gold (ID: 1204) if someone searches for Diamant
+        if (StringHelper::contains($userSearchTerms, 'diamant', false)) {
+          $event->scores[1204] = 100;
+        }
+
+        // Go through all Craft-determined scores
+        foreach($scores as $elementId => $score) {
           
-          // Increase Everdell value by 5x
-          $results_matching_score_element = array_filter($event->results, function($result) use ($elementId) {
+          // Any result containing the keyword Everdell will have its score doubled
+          $resultsMatchingThisScoreElement = array_filter($results, function($result) use ($elementId) {
             return $result['elementId'] == $elementId;
           });
-          foreach ($results_matching_score_element as $result) {
-            if ( str_contains($result['keywords'], 'everdell') ) {
-              $event->scores[$elementId] *= 5;
+          foreach ($resultsMatchingThisScoreElement as $result) {
+            if (StringHelper::contains($result['keywords'], 'everdell', false)) {
+              // Make sure score at least 1 (because 0*2=0)
+              $event->scores[$elementId] = max([1, $scores[$elementId] * 2]);
             }
           }
 
-          // Remove all results with a score lower than 1
-          // if ($event->scores[$elementId] < 1) {
-          //   unset($event->scores[$elementId]);
-          //   continue;
-          // }
+          // Remove any results with a score of 0
+          if ($scores[$elementId] < 1) {
+            unset($event->scores[$elementId]);
+            continue;
+          }
         }
       
       }
@@ -543,13 +401,13 @@ class SuperSearchModule extends \yii\base\Module
           }
 
           // If this is Favorite Games, also 5x it
-          if ($row['attribute'] === 'field' && $row['fieldId'] == 6) {
-            $mod *= 10;
-          }
+          // if ($row['attribute'] === 'field' && $row['fieldId'] == 6) {
+          //   $mod *= 10;
+          // }
 
-          if ($term->term === 'everdell') { 
-            $weight *= 15;
-          }
+          // if ($term->term === 'everdell') { 
+          //   $weight *= 15;
+          // }
 
           $score = ($score / $wordCount) * $mod * $weight;
       }
@@ -576,6 +434,104 @@ class SuperSearchModule extends \yii\base\Module
       }
 
       return $terms[$term];
+  }
+
+
+  // ----------------------------------------------------------------------------------------------[ ALGOLIA AND MEILISEARCH INTEGRATION ]
+  // Save entries to Meilisearch and Algolia on save
+  // Run Meilisearch with:  ~/Projects/meilisearch/meilisearch --master-key 58zmbORuI01yOiho0qNGO1xj5lK3D9KX76npjWEu2wQ
+  // Reindex with:  php craft resave/entries --updateSearchIndex
+  private function _registerIndexWithExternalServicesOnSave(): void
+  {
+    Event::on(
+      Entry::class,
+      Entry::EVENT_AFTER_SAVE,
+      function (ModelEvent $event) {       
+        $entry = $event->sender;   
+
+        if (ElementHelper::isDraft($entry) || ElementHelper::isRevision($entry)) return;
+
+        $meilisearchClient = new MeilisearchClient(getenv('MEILISEARCH_DOMAIN'), getenv('MEILISEARCH_KEY'));
+        $meilisearchIndex = $meilisearchClient->index(getenv('EXTERNAL_SEARCH_INDEX'));
+
+        $algoliaClient = AlgoliaClient::create(getenv('ALGOLIA_APPLICATION_ID'), getenv('ALGOLIA_ADMIN_API_KEY'));
+        $algoliaIndex = $algoliaClient->initIndex(getenv('EXTERNAL_SEARCH_INDEX'));
+
+        $entryData = $this->_transformEntryData($entry);
+
+        if ('live' == $entry->status) {
+          $algoliaIndex->saveObject($entryData, ['objectIDKey' => 'id']);
+          $meilisearchIndex->addDocuments([$entryData]);
+        } else {
+          $algoliaIndex->deleteObject($entryData['id']);
+          $meilisearchClient->deleteDocument((int)$entryData['id']);
+        }
+
+      }
+    );
+  }
+
+  private function _transformEntryData($entry): array
+  {
+    $variable = new SuperSearchVariable;
+
+    $entryData = [
+      'id' => $entry->id,
+      'section' => $entry->section->handle,
+      'name' => $entry->title,
+      'slug' => $entry->slug,
+      'url' => $variable->getResultLink($entry),
+      'postDate' => $entry->postDate->format('Y-m-d')
+    ];
+
+    if ($entry->extraSearchKeywords) {
+      $entryData['keywords'] = $entry->extraSearchKeywords;
+    }
+
+    if ($entry->section->handle == 'games') {
+      $entryData['boxCover'] = $entry->coverImage->one()->url;
+      $entryData['minPlayers'] = $entry->minPlayers;
+      $entryData['maxPlayers'] = $entry->maxPlayers;
+      $entryData['minLength'] = $entry->minLength;
+      $entryData['maxLength'] = $entry->maxLength;
+      $entryData['tags'] = $entry->gameTags->collect()->map(function($item) {
+        return $item->title;
+      })->join(' ');
+
+    } elseif ($entry->section->handle == 'staff') {
+      $entryData['position'] = $entry->position;
+      $entryData['content'] = strip_tags($entry->description);
+      $entryData['favoriteGames'] = $entry->favoriteGames->collect()->map(function($item) {
+        return $item->title;
+      })->join(' ');
+
+    } elseif ($entry->section->handle == 'menu') {
+      $entryData['content'] = strip_tags($entry->description);
+      $entryData['price'] = $entry->price;
+
+      if ($entry->type->handle == 'item') {
+        $entryData['category'] = $entry->parent->title;
+      }
+
+    } elseif ($entry->section->handle == 'events') {
+
+      $entryData['content'] = strip_tags($entry->description);
+      if ($entry->type->handle == 'weeklyEvent') {
+        $entryData['dayOfWeek'] = $entry->dayOfWeek->label;
+        $entryData['startTime'] = $entry->startTime;
+      } else {
+        $entryData['startDate'] = $entry->startDate;
+      }
+      $entryData['duration'] = $entry->duration;
+
+    } elseif ($entry->section->handle == 'blog' || $entry->section->handle == 'pages') {
+      $entryData['content'] = implode(' ', array_map(function($matrixBlock) {
+        return strip_tags($matrixBlock->textContent);
+      }, $entry->pageContent->type('textContent')->all()));
+    
+    }
+
+    return $entryData;
   }
 
 }

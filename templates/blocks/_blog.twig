@@ -4,7 +4,7 @@
 
   {% set blog = craft.entries.section('blog').orderBy('postDate DESC').collect() %}
   {% for post in blog %}
-    <a href="{{ post.url }}" class="group flex items-start mb-60">
+    <a href="{{ post.url }}" class="group flex items-start mb-80">
       <div class="flex-shrink-0 bg-dark w-200 h-200 rounded-lg overflow-hidden">
         {% set image = post.blogImage.one() %}
         <img src="{{ image ? image.getUrl({ width: 200, height: 200 }) : '' }}" />

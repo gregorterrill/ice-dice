@@ -33,7 +33,8 @@ class SearchController extends Controller
         'title' => $item->title,
         'url' => $variable->getResultLink($item),
         'section' => $item->section->name,
-        'icon' => $variable->icon($item->section->handle, 20)
+        'icon' => $variable->icon($item->section->handle, 20),
+        'image' => $item->section->handle == 'games' ? $item->coverImage->one()->url : false
       ];
     });
 

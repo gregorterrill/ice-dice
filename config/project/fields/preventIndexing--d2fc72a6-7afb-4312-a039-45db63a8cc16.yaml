@@ -1,0 +1,14 @@
+columnSuffix: vsepuosr
+contentColumnType: boolean
+fieldGroup: c0741afd-8d6d-4d7f-8380-02052e0593bf # Common
+handle: preventIndexing
+instructions: 'When turned on, this entry will not be indexed (note that this will not delete any existing data in the search index table for this entry, so ideally it should be turned on before the first save of this entry).'
+name: 'Prevent Indexing'
+searchable: false
+settings:
+  default: false
+  offLabel: null
+  onLabel: null
+translationKeyFormat: null
+translationMethod: none
+type: craft\fields\Lightswitch

@@ -19,7 +19,7 @@ return GeneralConfig::create()
     ->allowAdminChanges(App::env('ALLOW_ADMIN_CHANGES') ?? false)
     ->disallowRobots(App::env('DISALLOW_ROBOTS') ?? false)
     ->defaultSearchTermOptions([
-      'subLeft' => true, // default: false
+      'subLeft' => false, // default: false
       'subRight' => true, // default: true
-  ])
+    ])
 ;

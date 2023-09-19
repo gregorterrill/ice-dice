@@ -2,7 +2,7 @@ columnSuffix: wcjprlle
 contentColumnType: text
 fieldGroup: c0741afd-8d6d-4d7f-8380-02052e0593bf # Common
 handle: extraSearchKeywords
-instructions: null
+instructions: 'Additional keywords for indexing. For best results, this should not exceed 20 words.'
 name: 'Search Keywords'
 searchable: true
 settings:
@@ -10,7 +10,7 @@ settings:
   charLimit: null
   code: false
   columnType: null
-  initialRows: 4
+  initialRows: 2
   multiline: true
   placeholder: null
   uiMode: normal

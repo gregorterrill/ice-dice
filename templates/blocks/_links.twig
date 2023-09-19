@@ -7,10 +7,12 @@
   <div class="grid md:grid-cols-2 xl:grid-cols-3 gap-24">
 
   {% for link in links %}
-    <a href="{{ link.linkedEntry.one().url }}" class="group relative bg-brand flex flex-wrap p-40">
-      <span class="absolute right-40 top-1/2 -mt-32 text-white opacity-50 origin-center group-hover:scale-125 group-hover:opacity-100 transition-all">{{ craft.supersearch.icon(link.iconSlug, 64) }}</span>
+    <a href="{{ link.linkedEntry.one().url }}" class="group relative bg-brand flex flex-wrap p-40 rounded-lg">
       <span class="typo-lead">{{ link.linkText }}</span>
       <span class="inline-block relative top-3 left-6 group-hover:left-12 transition-all">{{ craft.supersearch.icon('arrow-right', 24) }}</span>
+      <span class="absolute block right-40 top-1/2 -mt-40 rounded-full bg-white/80 group-hover:bg-white transition-colors w-80 h-80">
+        <span class="absolute left-1/2 top-1/2 -mt-32 -ml-32 opacity-80 text-brand origin-center group-hover:scale-125 group-hover:opacity-100 group-hover:text-black transition-all">{{ craft.supersearch.icon(link.iconSlug, 64) }}</span>
+      </span>
     </a>
   {% endfor %}
 
