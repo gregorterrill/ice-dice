@@ -65,11 +65,11 @@ class SuperSearchModule extends \yii\base\Module
     );
 
     // Indexing Events
-    // $this->_registerBeforeUpdateSearchIndex();
-    // $this->_registerRegisterSearchableAttributes();
-    // $this->_registerDefineAttributeKeywords();
-    // $this->_registerDefineFieldKeywords();
-    // $this->_registerBeforeIndexKeywords();
+    //$this->_registerBeforeUpdateSearchIndex();
+    //$this->_registerRegisterSearchableAttributes();
+    //$this->_registerDefineAttributeKeywords();
+    //$this->_registerDefineFieldKeywords();
+    //$this->_registerBeforeIndexKeywords();
 
     // Search Events
     //$this->_registerBeforeScoreResults();
@@ -197,7 +197,7 @@ class SuperSearchModule extends \yii\base\Module
 
         // If "hidden movement" appears in the "Game Tags" field - no it doesn't
         if ($fieldId == 12 && StringHelper::contains($keywords, 'hidden movement', false)) {
-          $event->keywords = StringHelper::replaceAll($event->keywords, 'hidden movement', '', false);
+          $event->keywords = StringHelper::replaceAll($event->keywords, ['hidden movement'], [''], false);
           // If we wanted to prevent Game Tags fields containing "hidden movement" from ever being indexed, 
           // we could set this to false to prevent the row from saving
           $event->isValid = true;
@@ -220,12 +220,12 @@ class SuperSearchModule extends \yii\base\Module
       function (SearchEvent $event) {
 
         // If scores is set, Craft will NOT calculate scores
-        $event->scores = [
-          1133 => 1,
-          796 => 2,
-          1204 => 2
-        ];
-        return;
+        // $event->scores = [
+        //   1133 => 1,
+        //   796 => 2,
+        //   1204 => 2
+        // ];
+        // return;
 
         // First we have to set up the terms and groups as Craft would do normally
         $this->_terms = [];
@@ -250,14 +250,16 @@ class SuperSearchModule extends \yii\base\Module
           $results[$i] = $row;
 
           if (!isset($scores[$elementId])) {
-            $scores[$elementId] = $score;
+              $scores[$elementId] = $score;
           } else {
-            $scores[$elementId] += $score;
+              $scores[$elementId] += $score;
           }
         }
 
+        // If results are set, Craft will score these new results instead
         $event->results = $results;
-        $event->results = $scores;
+        // If scores are set, Craft's scoring will be skipped - it just uses our scores
+        $event->scores = $scores;
       }
     );
   }
@@ -283,19 +285,19 @@ class SuperSearchModule extends \yii\base\Module
           $event->scores[1204] = 100;
         }
 
-        // Go through all Craft-determined scores
+        // // Go through all Craft-determined scores
         foreach($scores as $elementId => $score) {
           
-          // Any result containing the keyword Everdell will have its score doubled
-          $resultsMatchingThisScoreElement = array_filter($results, function($result) use ($elementId) {
-            return $result['elementId'] == $elementId;
-          });
-          foreach ($resultsMatchingThisScoreElement as $result) {
-            if (StringHelper::contains($result['keywords'], 'everdell', false)) {
-              // Make sure score at least 1 (because 0*2=0)
-              $event->scores[$elementId] = max([1, $scores[$elementId] * 2]);
-            }
-          }
+        //   // Any result containing the keyword Everdell will have its score doubled
+        //   $resultsMatchingThisScoreElement = array_filter($results, function($result) use ($elementId) {
+        //     return $result['elementId'] == $elementId;
+        //   });
+        //   foreach ($resultsMatchingThisScoreElement as $result) {
+        //     if (StringHelper::contains($result['keywords'], 'everdell', false)) {
+        //       // Make sure score at least 1 (because 0*2=0)
+        //       $event->scores[$elementId] = max([1, $scores[$elementId] * 2]);
+        //     }
+        //   }
 
           // Remove any results with a score of 0
           if ($scores[$elementId] < 1) {
@@ -397,10 +399,10 @@ class SuperSearchModule extends \yii\base\Module
 
           // If this is a title, 5X it
           if ($row['attribute'] === 'title') {
-              $mod *= 50;
+              $mod *= 5;
           }
 
-          // If this is Favorite Games, also 5x it
+          // // If this is Favorite Games, also 5x it
           // if ($row['attribute'] === 'field' && $row['fieldId'] == 6) {
           //   $mod *= 10;
           // }
