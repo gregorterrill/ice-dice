@@ -3,50 +3,51 @@ namespace modules\supersearch;
 use modules\supersearch\variables\SuperSearchVariable;
 
 use Craft;
-use craft\web\twig\variables\CraftVariable;
+use yii\base\Module as BaseModule;
 use yii\base\Event;
-
-use Meilisearch\Client as MeilisearchClient;
-use Algolia\AlgoliaSearch\SearchClient as AlgoliaClient;
-
-use craft\elements\Entry;
-use craft\helpers\ElementHelper;
+use craft\web\twig\variables\CraftVariable;
 use craft\services\Search;
+use craft\services\Elements;
+use craft\base\Element;
+use craft\base\Field;
+use craft\elements\Entry;
 use craft\events\RegisterElementSearchableAttributesEvent;
 use craft\events\IndexKeywordsEvent;
 use craft\events\SearchEvent;
 use craft\events\ModelEvent;
-use craft\helpers\Search as SearchHelper;
-use craft\helpers\StringHelper;
-use craft\services\Elements;
-use craft\base\Element;
 use craft\events\DefineAttributeKeywordsEvent;
-use craft\base\Field;
 use craft\events\DefineFieldKeywordsEvent;
 use craft\events\ElementEvent;
+use craft\helpers\ElementHelper;
+use craft\helpers\Search as SearchHelper;
+use craft\helpers\StringHelper;
 use craft\search\SearchQuery;
 use craft\search\SearchQueryTerm;
 use craft\search\SearchQueryTermGroup;
-
 use craft\db\Query;
 use craft\db\Table;
 use yii\db\Expression;
 use yii\db\Schema;
+
+use Meilisearch\Client as MeilisearchClient;
+use Algolia\AlgoliaSearch\SearchClient as AlgoliaClient;
 
 
 /**
  * This class will be available throughout the system via:
  * `Craft::$app->getModule('supersearch')`.
  */
-class SuperSearchModule extends \yii\base\Module
+class SuperSearchModule extends BaseModule
 {
-  public function init()
+
+  // ----------------------------------------------------------------------------------------------[ INIT ]
+  public function init(): void
   {
     // Set a @modules alias pointed to the modules/ directory
     Craft::setAlias('@modules', __DIR__);
 
     // Set the controllerNamespace based on whether this is a console or web request
-    if (Craft::$app->getRequest()->getIsConsoleRequest()) {
+    if (Craft::$app->request->isConsoleRequest) {
         $this->controllerNamespace = 'modules\\supersearch\\console\\controllers';
     } else {
         $this->controllerNamespace = 'modules\\supersearch\\controllers';
@@ -54,7 +55,38 @@ class SuperSearchModule extends \yii\base\Module
 
     parent::init();
 
-     // Custom variables for use in Twig
+    // Defer most setup tasks until Craft is fully initialized
+    Craft::$app->onInit(function() {
+        $this->attachEventHandlers();
+    });
+  }
+
+  // ----------------------------------------------------------------------------------------------[ EVENT HANDLERS ]
+  private function attachEventHandlers(): void
+  {
+      $this->_registerSuperSearchVariable();
+
+      // Indexing Events
+      //$this->_registerBeforeUpdateSearchIndex();
+      //$this->_registerRegisterSearchableAttributes();
+      //$this->_registerDefineAttributeKeywords();
+      //$this->_registerBeforeIndexKeywords();
+      //$this->_registerDefineFieldKeywords();
+  
+      // Search Events
+      //$this->_registerBeforeScoreResults();
+      //$this->_registerAfterSearch();
+
+      // External Search
+      //$this->_registerIndexWithExternalServicesOnSave();
+  }
+
+  // ----------------------------------------------------------------------------------------------[ VARIABLE ]
+  /**
+   * Register custom variable to use in templates
+   */
+  private function _registerSuperSearchVariable(): void
+  {
     Event::on(
       CraftVariable::class,
       CraftVariable::EVENT_INIT,
@@ -63,21 +95,6 @@ class SuperSearchModule extends \yii\base\Module
         $variable->set('supersearch', SuperSearchVariable::class);
       }
     );
-
-    // Indexing Events
-    //$this->_registerBeforeUpdateSearchIndex();
-    //$this->_registerRegisterSearchableAttributes();
-    //$this->_registerDefineAttributeKeywords();
-    //$this->_registerDefineFieldKeywords();
-    //$this->_registerBeforeIndexKeywords();
-
-    // Search Events
-    //$this->_registerBeforeScoreResults();
-    //$this->_registerAfterSearch();
-
-    // External Search
-    //$this->_registerIndexWithExternalServicesOnSave();
-
   }
 
   // ----------------------------------------------------------------------------------------------[ INDEXING RELATED EVENTS ]
@@ -145,9 +162,41 @@ class SuperSearchModule extends \yii\base\Module
             $event->keywords = 'menu ' . $element->parent->title;
           } else {
             // If it's not a menu item, it'll just end up with a blank row, but there's no way to prevent that here
-            // We can prevent the blank row from saving later on in EVENT_BEFORE_INDEX_KEYWORDS
+            // We can prevent the blank row from actually being saved in EVENT_BEFORE_INDEX_KEYWORDS
           }
         }
+      }
+    );
+  }
+
+  /**
+   * EVENT_BEFORE_INDEX_KEYWORDS can be used to modify keywords before they're saved
+   */
+  private function _registerBeforeIndexKeywords(): void
+  {
+    Event::on(
+      Search::class,
+      Search::EVENT_BEFORE_INDEX_KEYWORDS,
+      function (IndexKeywordsEvent $event) {
+        
+        // This is what we've got to work with
+        $element = $event->element;
+        $attribute = $event->attribute;
+        $fieldId = $event->fieldId;
+        $keywords = $event->keywords;
+
+        // Prevent the blank "Menu Category" rows from being saved (on non-menu item entries, eg.)
+        if ($attribute == 'menucategory' && !$keywords)  {
+          $event->isValid = false;
+        }
+
+        // //If "hidden movement" appears in the "Game Tags" field - no it doesn't
+        // if ($fieldId == 12 && StringHelper::contains($keywords, 'hidden movement', false)) {
+        //   $event->keywords = StringHelper::replaceAll($event->keywords, ['hidden movement'], [''], false);
+        //   // If we wanted to prevent Game Tags fields containing "hidden movement" from ever being indexed, 
+        //   // we could set this to false to prevent the row from saving
+        //   $event->isValid = true;
+        // }
       }
     );
   }
@@ -174,38 +223,6 @@ class SuperSearchModule extends \yii\base\Module
     );
   }
 
-  /**
-   * EVENT_BEFORE_INDEX_KEYWORDS can be used to modify keywords before they're saved
-   */
-  private function _registerBeforeIndexKeywords(): void
-  {
-    Event::on(
-      Search::class,
-      Search::EVENT_BEFORE_INDEX_KEYWORDS,
-      function (IndexKeywordsEvent $event) {
-        
-        // This is what we've got to work with
-        $element = $event->element;
-        $attribute = $event->attribute;
-        $fieldId = $event->fieldId;
-        $keywords = $event->keywords;
-
-        // Prevent the blank "Menu Category" rows from being saved (on non-menu item entries, eg.)
-        if ($attribute == 'menucategory' && !$keywords) {
-          $event->isValid = false;
-        }
-
-        // If "hidden movement" appears in the "Game Tags" field - no it doesn't
-        if ($fieldId == 12 && StringHelper::contains($keywords, 'hidden movement', false)) {
-          $event->keywords = StringHelper::replaceAll($event->keywords, ['hidden movement'], [''], false);
-          // If we wanted to prevent Game Tags fields containing "hidden movement" from ever being indexed, 
-          // we could set this to false to prevent the row from saving
-          $event->isValid = true;
-        }
-      }
-    );
-  }
-
   // ----------------------------------------------------------------------------------------------[ SEARCH QUERY RELATED EVENTS ]
 
   /**
@@ -219,45 +236,45 @@ class SuperSearchModule extends \yii\base\Module
       Search::EVENT_BEFORE_SCORE_RESULTS,
       function (SearchEvent $event) {
 
-        // If scores is set, Craft will NOT calculate scores
-        // $event->scores = [
-        //   1133 => 1,
-        //   796 => 2,
-        //   1204 => 2
-        // ];
-        // return;
+        // If results are set, Craft will score these new results instead (if we weren't providing scores)
+        $event->results = array_filter($event->results, function($item) {
+          return in_array($item['elementId'], [786, 794]); // only allow results containing the word "Monica"
+        });
+        return;
 
-        // First we have to set up the terms and groups as Craft would do normally
-        $this->_terms = [];
-        $this->_groups = [];
-        $searchQuery = $event->query;
-        foreach ($searchQuery->getTokens() as $obj) {
-            if ($obj instanceof SearchQueryTermGroup) {
-                $this->_groups[] = $obj->terms;
-            } else {
-                $this->_terms[] = $obj;
-            }
+        // We're going to use this function to do all the scoring ourselves, using much simpler logic
+        // than Craft uses by default. We're just going to use the EXACT query text and the score will
+        // be the number of times that text appears in any field/attribute for the element.
+
+        // This is EXACTLY what was typed in - we don't care about AND terms and OR groups, make it simple!
+        $searchQuery = trim($event->query->getQuery());
+        
+        // We need the site ID to determine the language
+        $siteId = $event->siteId;
+        if ($siteId && !is_array($siteId)) {
+          $site = Craft::$app->getSites()->getSiteById($siteId);
         }
-
-        // Here we calculate scores and adjust results so that the Search service will skip doing that
-        $results = [];
+      
+        // We're going to set new results and calculate scores so that the Search service will skip doing that
         $scores = [];
 
-        // Loop through results and calculate score per element
+        // Loop through results and calculate the score for each row
         foreach ($event->results as $i => $row) {
+          $score = 0;
           $elementId = $row['elementId'];
-          $score = $this->_scoreRow($row, $event->siteId);
-          $results[$i] = $row;
 
+          // Normalize the search query, and count how many times it appears in the row
+          $keywords = SearchHelper::normalizeKeywords($searchQuery, [], true, $site->language ?? null);
+          $score = StringHelper::countSubstrings($row['keywords'], $keywords);
+
+          // Add this to our new results array, and create or update the key/value in the scores array
           if (!isset($scores[$elementId])) {
-              $scores[$elementId] = $score;
+            $scores[$elementId] = $score;
           } else {
-              $scores[$elementId] += $score;
+            $scores[$elementId] += $score;
           }
         }
 
-        // If results are set, Craft will score these new results instead
-        $event->results = $results;
         // If scores are set, Craft's scoring will be skipped - it just uses our scores
         $event->scores = $scores;
       }
@@ -286,7 +303,7 @@ class SuperSearchModule extends \yii\base\Module
         }
 
         // // Go through all Craft-determined scores
-        foreach($scores as $elementId => $score) {
+        // foreach($scores as $elementId => $score) {
           
         //   // Any result containing the keyword Everdell will have its score doubled
         //   $resultsMatchingThisScoreElement = array_filter($results, function($result) use ($elementId) {
@@ -299,150 +316,23 @@ class SuperSearchModule extends \yii\base\Module
         //     }
         //   }
 
-          // Remove any results with a score of 0
-          if ($scores[$elementId] < 1) {
-            unset($event->scores[$elementId]);
-            continue;
-          }
-        }
+        //   // Remove any results with a score of 0
+        //   if ($scores[$elementId] < 1) {
+        //     unset($event->scores[$elementId]);
+        //     continue;
+        //   }
+        // }
       
       }
     );
-  }
-
-  // ----------------------------------------------------------------------------------------------[ MODIFIED SCORING FUNCTIONS FROM CRAFT CORE ]
-
-  /**
-   * @var SearchQueryTerm[]
-   */
-  private array $_terms;
-
-  /**
-   * @var SearchQueryTerm[][]
-   */
-  private array $_groups;
-
-  /**
-   * Calculate score for a result.
-   *
-   * @param array $row A single result from the search query.
-   * @param int|int[]|null $siteId
-   * @return int The total score for this row.
-   */
-  private function _scoreRow(array $row, array|int|null $siteId = null): int
-    {
-      // Starting point
-      $score = 0;
-
-      // Loop through AND-terms and score each one against this row
-      foreach ($this->_terms as $term) {
-          $score += $this->_scoreTerm($term, $row, 1, $siteId);
-      }
-
-      // Loop through each group of OR-terms
-      foreach ($this->_groups as $terms) {
-          // OR-terms are weighted less depending on the amount of OR terms in the group
-          $weight = 1 / count($terms);
-
-          // Get the score for each term and add it to the total
-          foreach ($terms as $term) {
-              $score += $this->_scoreTerm($term, $row, $weight, $siteId);
-          }
-      }
-
-      return (int)round($score);
-  }
-
-  /**
-   * Calculate score for a row/term combination.
-   *
-   * @param SearchQueryTerm $term The SearchQueryTerm to score.
-   * @param array $row The result row to score against.
-   * @param float|int $weight Optional weight for this term.
-   * @param int|int[]|null $siteId
-   * @return float The total score for this term/row combination.
-   */
-  private function _scoreTerm(SearchQueryTerm $term, array $row, float|int $weight = 1, array|int|null $siteId = null): float
-  {
-      // Skip these terms: exact filtering is just that, no weighted search applies since all elements will
-      // already apply for these filters.
-      if ($term->exact || !($keywords = $this->_normalizeTerm($term->term, $siteId))) {
-          return 0;
-      }
-
-      // Account for substrings
-      if (!$term->subLeft) {
-          $keywords = ' ' . $keywords;
-      }
-
-      if (!$term->subRight) {
-          $keywords .= ' ';
-      }
-
-      // Get haystack and safe word count
-      $haystack = $row['keywords'];
-      $wordCount = count(array_filter(explode(' ', $haystack)));
-
-      // Get number of matches
-      $score = StringHelper::countSubstrings($haystack, $keywords);
-
-      if ($score) {
-          // Exact match
-          if (trim($keywords) === trim($haystack)) {
-              $mod = 100;
-          } // Don't scale up for substring matches
-          elseif ($term->subLeft || $term->subRight) {
-              $mod = 10;
-          } else {
-              $mod = 50;
-          }
-
-          // If this is a title, 5X it
-          if ($row['attribute'] === 'title') {
-              $mod *= 5;
-          }
-
-          // // If this is Favorite Games, also 5x it
-          // if ($row['attribute'] === 'field' && $row['fieldId'] == 6) {
-          //   $mod *= 10;
-          // }
-
-          // if ($term->term === 'everdell') { 
-          //   $weight *= 15;
-          // }
-
-          $score = ($score / $wordCount) * $mod * $weight;
-      }
-
-      return $score;
-  }
-
-  /**
-   * Normalize term from tokens, keep a record for cache.
-   *
-   * @param string $term
-   * @param int|int[]|null $siteId
-   * @return string
-   */
-  private function _normalizeTerm(string $term, array|int|null $siteId = null): string
-  {
-      static $terms = [];
-
-      if (!array_key_exists($term, $terms)) {
-          if ($siteId && !is_array($siteId)) {
-              $site = Craft::$app->getSites()->getSiteById($siteId);
-          }
-          $terms[$term] = SearchHelper::normalizeKeywords($term, [], true, $site->language ?? null);
-      }
-
-      return $terms[$term];
   }
 
 
   // ----------------------------------------------------------------------------------------------[ ALGOLIA AND MEILISEARCH INTEGRATION ]
   // Save entries to Meilisearch and Algolia on save
   // Run Meilisearch with:  ~/Projects/meilisearch/meilisearch --master-key 58zmbORuI01yOiho0qNGO1xj5lK3D9KX76npjWEu2wQ
-  // Reindex with:  php craft resave/entries --updateSearchIndex
+  // Clear local and external indices completely with our custom CLI command:  php craft supersearch/index/wipe
+  // Reindex with the built-in CLI command:  php craft resave/entries --updateSearchIndex
   private function _registerIndexWithExternalServicesOnSave(): void
   {
     Event::on(
@@ -475,6 +365,7 @@ class SuperSearchModule extends \yii\base\Module
 
   private function _transformEntryData($entry): array
   {
+    // We're using a variable in a hacky way only because the logic is already there, but it should be extracted to a service
     $variable = new SuperSearchVariable;
 
     $entryData = [
