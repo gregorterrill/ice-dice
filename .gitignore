@@ -9,7 +9,7 @@
 /storage/*
 
 # ASSETS
-/web/images/*
+/web/images/transforms/*
 /web/cpresources/*
 
 # BUILD FILES
