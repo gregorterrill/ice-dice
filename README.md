@@ -29,3 +29,5 @@ This will create a `/node_modules/` folder containing all necessary front-end pa
 Create a database and serve the `/web/` directory using your local server (Valet, Herd, MAMP, etc). A copy of the database is included in the root directory.
 
 Copy the `.env.sample` file to `.env`, changing the DB credentials, URLs, and paths in your local copy of the file to match your local setup.
+
+The admin login credentials for Craft are admin / password123.

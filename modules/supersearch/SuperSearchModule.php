@@ -192,7 +192,7 @@ class SuperSearchModule extends BaseModule
 
         // //If "hidden movement" appears in the "Game Tags" field - no it doesn't
         // if ($fieldId == 12 && StringHelper::contains($keywords, 'hidden movement', false)) {
-        //   $event->keywords = StringHelper::replaceAll($event->keywords, ['hidden movement'], [''], false);
+        //   $event->keywords = StringHelper::replaceAll($keywords, ['hidden movement'], [''], false);
         //   // If we wanted to prevent Game Tags fields containing "hidden movement" from ever being indexed, 
         //   // we could set this to false to prevent the row from saving
         //   $event->isValid = true;
@@ -299,29 +299,29 @@ class SuperSearchModule extends BaseModule
 
         // Show Incan Gold (ID: 1204) if someone searches for Diamant
         if (StringHelper::contains($userSearchTerms, 'diamant', false)) {
-          $event->scores[1204] = 100;
+          $event->scores[1204] = 123;
         }
 
         // // Go through all Craft-determined scores
-        // foreach($scores as $elementId => $score) {
+        foreach($scores as $elementId => $score) {
           
-        //   // Any result containing the keyword Everdell will have its score doubled
-        //   $resultsMatchingThisScoreElement = array_filter($results, function($result) use ($elementId) {
-        //     return $result['elementId'] == $elementId;
-        //   });
-        //   foreach ($resultsMatchingThisScoreElement as $result) {
-        //     if (StringHelper::contains($result['keywords'], 'everdell', false)) {
-        //       // Make sure score at least 1 (because 0*2=0)
-        //       $event->scores[$elementId] = max([1, $scores[$elementId] * 2]);
-        //     }
-        //   }
+          // Any result containing the keyword Sagrada will have its score doubled
+          $resultsMatchingThisScoreElement = array_filter($results, function($result) use ($elementId) {
+            return $result['elementId'] == $elementId;
+          });
+          foreach ($resultsMatchingThisScoreElement as $result) {
+            if (StringHelper::contains($result['keywords'], 'sagrada', false)) {
+              // Make sure score at least 1 (because 0*2=0)
+              $event->scores[$elementId] = max([1, $scores[$elementId] * 2]);
+            }
+          }
 
-        //   // Remove any results with a score of 0
-        //   if ($scores[$elementId] < 1) {
-        //     unset($event->scores[$elementId]);
-        //     continue;
-        //   }
-        // }
+          // Remove any results with a score of 0
+          if ($scores[$elementId] < 1) {
+            unset($event->scores[$elementId]);
+            continue;
+          }
+        }
       
       }
     );
